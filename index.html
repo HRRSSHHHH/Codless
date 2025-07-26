@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Codless - Empowering innovation with cutting-edge solutions and transformative experiences.">
+    <meta name="keywords" content="codless, innovation, technology, solutions, transformation, digital">
+    <meta name="author" content="Codless">
+    <title>Codless - Empowering Innovation</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <!-- External CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Lenis Smooth Scrolling -->
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.27/bundled/lenis.min.js"></script>
+</head>
+<body>
+    <div id="custom-cursor"></div>
+    <div id="cursor-particles"></div>
+    <!-- Loading Screen -->
+    <div class="loader-container" id="loader">
+        <div class="shapes-container">
+            <div class="hexagon"></div>
+            <div class="hexagon"></div>
+            <div class="circle"></div>
+            <div class="circle"></div>
+        </div>
+    </div>
+    <!-- Navigation -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="navbar-left">
+            <a href="#" class="navbar-logo" aria-label="Codless Home">Codless</a>
+        </div>
+        <div class="navbar-center">
+            <ul class="navbar-list">
+                <li><a class="navbar-tab" href="#about">Why</a></li>
+                <li><a class="navbar-tab" href="#tools">Tools</a></li>
+                <li><a class="navbar-tab" href="#how-we-do-it">How</a></li>
+                <li><a class="navbar-tab" href="#faq">FAQ</a></li>
+                <li><a class="navbar-tab" href="#contact">Contact</a></li>
+            </ul>
+        </div>
+        <button class="hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navbar-links">
+            <span class="sr-only">Toggle navigation menu</span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+    </nav>
+    <!-- Main Content (initially hidden) -->
+    <div id="main-content" style="display: none;">
+        <main>
+        <header class="hero-section dark-bg" style="position:relative;overflow:hidden;width:100vw;min-width:100vw;left:0;transform:none;">
+  <video class="hero-bg-video" src="videos/hero-section-background.mp4" autoplay loop muted playsinline aria-hidden="true" tabindex="-1"></video>
+  <div class="hero-content section-animate-fade" style="position:relative;z-index:2;">
+                <div class="hero-intro">
+                  <div class="hero-intro-text">
+                    Yes I coded this website with 0 knowledge of code
+                    <div class="text-reveal">Yes I coded this website with 0 knowledge of code</div>
+                  </div>
+                </div>
+                <div class="hero-title-container">
+                  <h1 class="hero-title section-animate-header">I didn't know how to code. So I let AI do it.</h1>
+                </div>
+                <div class="cta-container" id="scroll-cta" role="button" tabindex="0" aria-label="Scroll down to explore how">
+                  <div class="mouse-icon">
+                    <div class="scroll-wheel"></div>
+                  </div>
+                  <div class="text">
+                    <span class="cta-text-main">Explore How</span>
+                    <span class="cta-text-morph">Scroll down</span>
+                  </div>
+                </div>
+            </div>
+            <!-- Sound Bars Button: Bottom Right (Hero Section Only) -->
+            <div class="sound-bars-btn clickable" tabindex="0" role="button" aria-label="Click here to hear me talk">
+              <div class="sound-bars">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+              </div>
+              <div class="sound-text">Hear me talk!</div>
+            </div>
+        </header>
+            <!-- Why Section -->
+            <section class="why-section dark-bg move-in-section section-animate" id="why-i-did-it" aria-label="Why I Did It">
+            <div class="why-header">
+                <div class="why-title-wrapper">
+                <h2 class="why-title section-animate-header">Why I Did This?</h2>
+                </div>
+                <div class="why-description">
+                <p class="typewriter-text"><span class="typewriter-text-inner">Everyone kept shouting, <span class="highlight-point">“Learn AI before it takes your job.”</span> So I stopped scrolling and started building. I <span class="highlight-point">used AI to design, code, animate, and launch</span> this entire website—no devs, no hand-written code. It’s not perfect, but <span class="highlight-point">it’s real.</span> And it proves that <span class="highlight-point">experimenting beats overthinking</span>.</span></p>
+            </div>
+        </div>
+        </section>
+
+        <!-- Tools Section -->
+            <section class="tools-section section-animate-scale" id="tools" aria-label="Tools used">
+                <div class="tools-container section-animate-fade">
+                    <div class="tools-orbit-container">
+                        <div class="tools-center-title section-animate-header">
+                            Tools I Used
+                        </div>
+                        <div class="tools-hover-caption">Hover over icons to reveal</div>
+                        <div class="tools-orbit">
+                            <a href="https://chat.openai.com/" target="_blank" rel="noopener" class="tool-moon" data-tool="chatgpt">
+                                <img src="icons/ChatGPT.svg" alt="ChatGPT" class="tool-icon">
+                                <span class="tool-label">ChatGPT</span>
+                            </a>
+                            <a href="https://x.ai/" target="_blank" rel="noopener" class="tool-moon" data-tool="grok">
+                                <img src="icons/Grok AI.svg" alt="Grok AI" class="tool-icon">
+                                <span class="tool-label">Grok AI</span>
+                            </a>
+                            <a href="https://figma.com/" target="_blank" rel="noopener" class="tool-moon" data-tool="figma">
+                                <img src="icons/Figma.svg" alt="Figma" class="tool-icon">
+                                <span class="tool-label">Figma</span>
+                            </a>
+                            <a href="https://www.perplexity.ai/" target="_blank" rel="noopener" class="tool-moon" data-tool="perplexity">
+                                <img src="icons/Perplexity.svg" alt="Perplexity" class="tool-icon">
+                                <span class="tool-label">Perplexity</span>
+                            </a>
+                            <a href="https://www.cursor.so/" target="_blank" rel="noopener" class="tool-moon" data-tool="cursor">
+                                <img src="icons/Cursor AI.svg" alt="Cursor AI" class="tool-icon">
+                                <span class="tool-label">Cursor AI</span>
+                            </a>
+                            <a href="https://runwayml.com/" target="_blank" rel="noopener" class="tool-moon" data-tool="runway">
+                                <img src="icons/Runway AI.svg" alt="Runway AI" class="tool-icon">
+                                <span class="tool-label">Runway AI</span>
+                            </a>
+                            <a href="https://blog.google/technology/ai/google-veo-ai-video-generation-model/" target="_blank" rel="noopener" class="tool-moon" data-tool="veo3">
+                                <img src="icons/Veo 3.svg" alt="Veo 3" class="tool-icon">
+                                <span class="tool-label">Veo 3</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Lets See How We Do It Section -->
+<section id="lets-see-how-we-do-it" class="lets-see-how-we-do-it-section" aria-label="Let's See How We Do It">
+  <h2 class="lets-see-how-we-do-it-title animated-header section-header" tabindex="0" aria-label="Let's See How We Do It">
+    <span class="letter from-below">L</span><span class="letter from-above">e</span><span class="letter from-below">t</span><span class="letter from-above">'</span><span class="letter from-below">s</span><span class="letter space from-above"> </span><span class="letter from-below">S</span><span class="letter from-above">e</span><span class="letter from-below">e</span><span class="letter space from-above"> </span><span class="letter from-below">H</span><span class="letter from-above">o</span><span class="letter from-below">w</span><span class="letter space from-above"> </span><span class="letter from-below">W</span><span class="letter from-above">e</span><span class="letter space from-below"> </span><span class="letter from-above">D</span><span class="letter from-below">o</span><span class="letter space from-above"> </span><span class="letter from-below">I</span><span class="letter from-above">t</span><span class="letter from-below">!</span>
+  </h2>
+</section>
+  <!-- Card stacker wrapper for step sections -->
+<!-- Step 1 Section -->
+<section class="step-section step-section-1" id="step-1" aria-label="Step 1" style="position:relative;overflow:hidden;">
+  <video class="step1-bg-video" src="videos/Step-1-BG.mp4" autoplay loop muted playsinline aria-hidden="true" tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;"></video>
+  <div class="step1-overlay" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(4,8,15,0.80);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:1;pointer-events:none;"></div>
+  <div class="step-container step1-container" style="position:relative;z-index:2;">
+    <div class="step-col step-col-left">
+      <div class="step-left-stack">
+        <div class="step-left-top">
+          <span class="step-label">Step 1</span>
+          <span class="step-title">
+            <span class="step-title-main">Inspiration</span>
+            <span class="step-title-spark">(The Spark)</span>
+          </span>
+        </div>
+        <div class="step-left-mid">It started with a what if…</div>
+        <div class="step-left-desc">One evening, I found myself thinking — what if I could build a full website without writing a single line of code? Not a landing page template. A real, functioning, animated site. Everyone's talking about AI taking jobs. I wanted to flip it — and see what I could build with it. That moment became this project.</div>
+                    </div>
+                    </div>
+    <div class="step-col step-col-right">
+      <div class="step-right-content step1-graphic-wrapper" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+        <video 
+          class="step1-graphic-video"
+          src="videos/Step-1-BG.mp4"
+          autoplay
+          loop
+          muted
+          playsinline
+          aria-hidden="true"
+          tabindex="-1"
+          style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,0.2);"
+        ></video>
+                    </div>
+                    </div>
+</section>
+<!-- Step 2 Section -->
+<section class="step-section step-section-2" id="step-2" aria-label="Step 2" style="position:relative;overflow:hidden;">
+  <video class="step2-bg-video" src="videos/Step-2-BG.mp4" autoplay loop muted playsinline aria-hidden="true" tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;"></video>
+  <div class="step2-overlay" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(4,8,15,0.80);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:1;pointer-events:none;"></div>
+  <div class="step-container step2-container" style="position:relative;z-index:2;">
+    <div class="step-col step-col-left">
+      <div class="step-left-stack">
+        <div class="step-left-top">
+          <span class="step-label">Step 2</span>
+          <span class="step-title">
+            <span class="step-title-main">Curiosity</span>
+            <span class="step-title-spark">(Ask the right questions)</span>
+          </span>
+        </div>
+        <div class="step-left-mid">So... how do I even begin?</div>
+        <div class="step-left-desc">I opened ChatGPT and treated it like my creative co-founder. I asked: — What’s the goal of this site? — What problem am I solving? — What should the structure look like? It responded with a rough information architecture, a goal statement, and even suggested how the site could feel. That’s when it clicked: AI isn’t just a tool—it’s a thinking partner.</div>
+                    </div>
+                    </div>
+    <div class="step-col step-col-right">
+      <div class="step-right-content step2-graphic-wrapper" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+        <video 
+          class="step2-graphic-video"
+          src="videos/Step-2-graphic.mp4"
+          autoplay
+          loop
+          muted
+          playsinline
+          aria-hidden="true"
+          tabindex="-1"
+          style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,0.2);"
+        ></video>
+                    </div>
+            </div>
+            </div>
+        </section>
+<!-- Step 3 Section -->
+<section class="step-section step-section-3" id="step-3" aria-label="Step 3" style="position:relative;overflow:hidden;">
+  <video class="step3-bg-video" src="videos/Step-3-BG.mp4" autoplay loop muted playsinline aria-hidden="true" tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;"></video>
+  <div class="step3-overlay" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(4,8,15,0.80);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:1;pointer-events:none;"></div>
+  <div class="step-container step3-container" style="position:relative;z-index:2;">
+    <div class="step-col step-col-left">
+      <div class="step-left-stack">
+        <div class="step-left-top">
+          <span class="step-label">Step 3</span>
+          <span class="step-title">
+            <span class="step-title-main">Creative Flow</span>
+            <span class="step-title-spark">(Imagine the Feel)</span>
+          </span>
+        </div>
+        <div class="step-left-mid">What should this feel like?</div>
+        <div class="step-left-desc">I wanted more than just structure—I wanted vibe. So I asked ChatGPT to find the core emotion my site should evoke, then built everything around that:
+          Suggested keywords that matched the emotion.
+          Picked typography styles for personality.
+          Chose colors that visually reflect the emotion. That one prompt became the foundation for the entire visual system.</div>
+      </div>
+    </div>
+    <div class="step-col step-col-right">
+      <div class="step-right-content step3-graphic-wrapper" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+        <video 
+          class="step3-graphic-video"
+          src="videos/Step-3-BG.mp4"
+          autoplay
+          loop
+          muted
+          playsinline
+          aria-hidden="true"
+          tabindex="-1"
+          style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,0.2);"
+        ></video>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Step 4 Section -->
+<section class="step-section step-section-4" id="step-4" aria-label="Step 4" style="position:relative;overflow:hidden;">
+  <video class="step4-bg-video" src="videos/Step-4-BG.mp4" autoplay loop muted playsinline aria-hidden="true" tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;"></video>
+  <div class="step4-overlay" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(4,8,15,0.80);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:1;pointer-events:none;"></div>
+  <div class="step-container step4-container" style="position:relative;z-index:2;">
+    <div class="step-col step-col-left">
+      <div class="step-left-stack">
+        <div class="step-left-top">
+          <span class="step-label">Step 4</span>
+          <span class="step-title">
+            <span class="step-title-main">Exploration</span>
+            <span class="step-title-spark">(Research Like a Builder)</span>
+          </span>
+        </div>
+        <div class="step-left-mid">Steal like a strategist.</div>
+        <div class="step-left-desc">I used <b>Perplexity AI</b> to find the best websites related to my concept—not to copy, but to understand what works. I asked it to show me:
+          Top sites in the same space.
+          Their <b>layout patterns, components, and UX flows</b>.
+          Useful assets I could borrow or remix. It wasn't research for the sake of it. I was building a <b>toolbox</b>.</div>
+      </div>
+    </div>
+    <div class="step-col step-col-right">
+      <div class="step-right-content step4-graphic-wrapper" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+        <video 
+          class="step4-graphic-video"
+          src="videos/Step-4-BG.mp4"
+          autoplay
+          loop
+          muted
+          playsinline
+          aria-hidden="true"
+          tabindex="-1"
+          style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,0.2);"
+        ></video>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Step 5 Section -->
+<section class="step-section step-section-5" id="step-5" aria-label="Step 5" style="position:relative;overflow:hidden;">
+  <video class="step5-bg-video" src="videos/Step-5-BG.mp4" autoplay loop muted playsinline aria-hidden="true" tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;"></video>
+  <div class="step5-overlay" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(4,8,15,0.80);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:1;pointer-events:none;"></div>
+  <div class="step-container step5-container" style="position:relative;z-index:2;">
+    <div class="step-col step-col-left">
+      <div class="step-left-stack">
+        <div class="step-left-top">
+          <span class="step-label">Step 5</span>
+          <span class="step-title">
+            <span class="step-title-main">Playfulness + Taste</span>
+            <span class="step-title-spark">(Make It Visual)</span>
+          </span>
+        </div>
+        <div class="step-left-mid">Smashing the spacebar.</div>
+        <div class="step-left-desc">I took my primary and secondary colors, plugged them into Coolors.co, and started smashing the spacebar. Every refresh brought a new vibe. Once it clicked, I locked in 4 core tones:
+          <b>Primary</b> 
+          <b>Secondary</b> 
+          <b>Neutral Light</b> 
+          <b>Neutral Dark</b> Then I built out tints and shades for each—turning colors into a usable system, not just a palette.</div>
+      </div>
+    </div>
+    <div class="step-col step-col-right">
+      <div class="step-right-content step5-graphic-wrapper" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+        <video 
+          class="step5-graphic-video"
+          src="videos/Step-5-BG.mp4"
+          autoplay
+          loop
+          muted
+          playsinline
+          aria-hidden="true"
+          tabindex="-1"
+          style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,0.2);"
+        ></video>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Step 6 Section -->
+<section class="step-section step-section-6" id="step-6" aria-label="Step 6" style="position:relative;overflow:hidden;">
+  <video class="step6-bg-video" src="videos/Step-5-BG.mp4" autoplay loop muted playsinline aria-hidden="true" tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;"></video>
+  <div class="step6-overlay" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(4,8,15,0.80);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:1;pointer-events:none;"></div>
+  <div class="step-container step6-container" style="position:relative;z-index:2;">
+    <div class="step-col step-col-left">
+      <div class="step-left-stack">
+        <div class="step-left-top">
+          <span class="step-label">Step 6</span>
+          <span class="step-title">
+            <span class="step-title-main">Resourcefulness</span>
+            <span class="step-title-spark">(Remix the Greats)</span>
+          </span>
+        </div>
+        <div class="step-left-mid">Steal smart, Remix it better.</div>
+        <div class="step-left-desc">I picked my top 3 reference websites that i got from my research in Perplexity AI—the ones that nailed layout, clarity, or vibe. Then I asked Grok AI to break them down. I ranked them (favorite to least), and told Grok to use the 60/30/10 rule: <b>60% from the best</b> <b>30% from the second</b> <b>10% from the third.</b></div>
+      </div>
+    </div>
+    <div class="step-col step-col-right">
+      <div class="step-right-content step6-graphic-wrapper" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+        <video 
+          class="step6-graphic-video"
+          src="videos/Step-5-BG.mp4"
+          autoplay
+          loop
+          muted
+          playsinline
+          aria-hidden="true"
+          tabindex="-1"
+          style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,0.2);"
+        ></video>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Horizontal Scroll Container for Steps 7-12 -->
+<div class="horizontal-container" style="position: relative; width: 100vw; height: 100vh; overflow: hidden;">
+  <div class="horizontal-wrapper" style="position: absolute; height: 100%; display: flex; flex-direction: row; will-change: transform;">
+    <!-- Step 7 Section -->
+    <section class="step-section step-section-7 horizontal-card" id="step-7" aria-label="Step 7" style="position:relative;overflow:hidden;">
+  <video class="step7-bg-video" src="videos/Step-5-BG.mp4" autoplay loop muted playsinline aria-hidden="true" tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;"></video>
+  <div class="step7-overlay" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(4,8,15,0.80);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:1;pointer-events:none;"></div>
+  <div class="step-container step7-container" style="position:relative;z-index:2;">
+    <div class="step-col step-col-left">
+      <div class="step-left-stack">
+        <div class="step-left-top">
+          <span class="step-label">Step 7</span>
+          <span class="step-title">
+            <span class="step-title-main">Clarity</span>
+            <span class="step-title-spark">(Brief the Machine)</span>
+          </span>
+        </div>
+        <div class="step-left-mid">You get what you brief for.</div>
+        <div class="step-left-desc">Before letting Grok generate anything, I fed it the full story: <b>The goal of the site</b>, <b>The problem it solves</b>, <b>The rough information architecture</b>. I treated it like a creative partner, not just a code generator. With the right inputs, Grok knew exactly what to build—and how to structure it.</div>
+      </div>
+    </div>
+    <div class="step-col step-col-right">
+      <div class="step-right-content step7-graphic-wrapper" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+        <video 
+          class="step7-graphic-video"
+          src="videos/Step-5-BG.mp4"
+          autoplay
+          loop
+          muted
+          playsinline
+          aria-hidden="true"
+          tabindex="-1"
+          style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,0.2);"
+        ></video>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Step 8 Section -->
+<section class="step-section step-section-8 horizontal-card" id="step-8" aria-label="Step 8" style="position:relative;overflow:hidden;">
+  <video class="step8-bg-video" src="videos/Step-5-BG.mp4" autoplay loop muted playsinline aria-hidden="true" tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;"></video>
+  <div class="step8-overlay" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(4,8,15,0.80);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:1;pointer-events:none;"></div>
+  <div class="step-container step8-container" style="position:relative;z-index:2;">
+    <div class="step-col step-col-left">
+      <div class="step-left-stack">
+        <div class="step-left-top">
+          <span class="step-label">Step 8</span>
+          <span class="step-title">
+            <span class="step-title-main">Momentum</span>
+            <span class="step-title-spark">(Generate the First Draft)</span>
+          </span>
+        </div>
+        <div class="step-left-mid">Voila, a website</div>
+        <div class="step-left-desc">Grok took the brief and gave me the full <b>index.html</b> file—structured, styled, and ready to build on. It wasn’t perfect (nothing is at first), but it gave me momentum. I wasn’t staring at a blank screen anymore. <b></b>I was staring at something real.</b></div>
+      </div>
+    </div>
+    <div class="step-col step-col-right">
+      <div class="step-right-content step8-graphic-wrapper" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+        <video 
+          class="step8-graphic-video"
+          src="videos/Step-5-BG.mp4"
+          autoplay
+          loop
+          muted
+          playsinline
+          aria-hidden="true"
+          tabindex="-1"
+          style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,0.2);"
+        ></video>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Step 8(Alternative) Section -->
+<section class="step-section step-section-8(Alternative) horizontal-card" id="step-8(Alternative)" aria-label="Step 8(Alternative)" style="position:relative;overflow:hidden;">
+  <video class="step8(Alternative)-bg-video" src="videos/Step-5-BG.mp4" autoplay loop muted playsinline aria-hidden="true" tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;"></video>
+  <div class="step8(Alternative)-overlay" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(4,8,15,0.80);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:1;pointer-events:none;"></div>
+  <div class="step-container step8(Alternative)-container" style="position:relative;z-index:2;">
+    <div class="step-col step-col-left">
+      <div class="step-left-stack">
+        <div class="step-left-top">
+          <span class="step-label">Step 8(Alternative)</span>
+          <span class="step-title">
+            <span class="step-title-main">Designer Route</span>
+            <span class="step-title-spark">(Build It Yourself)</span>
+          </span>
+        </div>
+        <div class="step-left-mid">Control freaks option.</div>
+        <div class="step-left-desc">If you think better in pixels than prompts, this step’s for you. Instead of generating code, I opened Figma and created a rough layout using <b>Auto Layout</b>. Why? Because tools like <b>Figma to Code</b> plugins or AI helpers can convert that into <b>clean HTML + CSS.</b> No guessing. No guessing divs. Just design-first, code-later flow.</div>
+      </div>
+    </div>
+    <div class="step-col step-col-right">
+      <div class="step-right-content step9-graphic-wrapper" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+        <video 
+          class="step9-graphic-video"
+          src="videos/Step-5-BG.mp4"
+          autoplay
+          loop
+          muted
+          playsinline
+          aria-hidden="true"
+          tabindex="-1"
+          style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,0.2);"
+        ></video>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Step 9 Section -->
+<section class="step-section step-section-9 horizontal-card" id="step-9" aria-label="Step 9" style="position:relative;overflow:hidden;">
+  <video class="step9-bg-video" src="videos/Step-5-BG.mp4" autoplay loop muted playsinline aria-hidden="true" tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;"></video>
+  <div class="step9-overlay" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(4,8,15,0.80);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:1;pointer-events:none;"></div>
+  <div class="step-container step9-container" style="position:relative;z-index:2;">
+    <div class="step-col step-col-left">
+      <div class="step-left-stack">
+        <div class="step-left-top">
+          <span class="step-label">Step 9</span>
+          <span class="step-title">
+            <span class="step-title-main">Trust</span>
+            <span class="step-title-spark">(Meet Your AI Dev Partner)</span>
+          </span>
+        </div>
+        <div class="step-left-mid">I didn’t hire a dev.</div>
+        <div class="step-left-desc">I dropped my index.html file into <b>Cursor AI</b>, started a new project, and selected the folder like any normal repo. From there, Cursor took over like a <b>clean-freak senior developer</b>: <b>Separated HTML, CSS, JS into best-practice folders</b> <b>Organized everything into a proper file structure</b> <b>Let me tweak anything — just by asking</b> I wasn’t editing code. I was having a conversation with it.</div>
+      </div>
+    </div>
+    <div class="step-col step-col-right">
+      <div class="step-right-content step10-graphic-wrapper" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+        <video 
+          class="step10-graphic-video"
+          src="videos/Step-5-BG.mp4"
+          autoplay
+          loop
+          muted
+          playsinline
+          aria-hidden="true"
+          tabindex="-1"
+          style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,0.2);"
+        ></video>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Step 10 Section -->
+<section class="step-section step-section-10 horizontal-card" id="step-10" aria-label="Step 10" style="position:relative;overflow:hidden;">
+  <video class="step10-bg-video" src="videos/Step-5-BG.mp4" autoplay loop muted playsinline aria-hidden="true" tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;"></video>
+  <div class="step10-overlay" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(4,8,15,0.80);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:1;pointer-events:none;"></div>
+  <div class="step-container step10-container" style="position:relative;z-index:2;">
+    <div class="step-col step-col-left">
+      <div class="step-left-stack">
+        <div class="step-left-top">
+          <span class="step-label">Step 10</span>
+          <span class="step-title">
+            <span class="step-title-main">Empowerment</span>
+            <span class="step-title-spark">(Talk to Your Code )</span>
+          </span>
+        </div>
+        <div class="step-left-mid">Started <s>coding</s> Talking.</div>
+        <div class="step-left-desc">With Cursor AI, I didn’t need to Google syntax or dig through Stack Overflow. I just said things like: <b>“Center this hero section”</b> <b>“Make the navbar sticky on scroll”</b> <b>“Change this animation timing to 0.3s”</b> And it updated the actual code. The more I talked to it, the cleaner and more custom my site became.</div>
+      </div>
+    </div>
+    <div class="step-col step-col-right">
+      <div class="step-right-content step11-graphic-wrapper" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+        <video 
+          class="step11-graphic-video"
+          src="videos/Step-5-BG.mp4"
+          autoplay
+          loop
+          muted
+          playsinline
+          aria-hidden="true"
+          tabindex="-1"
+          style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,0.2);"
+        ></video>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Step 11 Section -->
+<section class="step-section step-section-11 horizontal-card" id="step-11" aria-label="Step 11" style="position:relative;overflow:hidden;">
+  <video class="step11-bg-video" src="videos/Step-5-BG.mp4" autoplay loop muted playsinline aria-hidden="true" tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;"></video>
+  <div class="step11-overlay" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(4,8,15,0.80);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:1;pointer-events:none;"></div>
+  <div class="step-container step11-container" style="position:relative;z-index:2;">
+    <div class="step-col step-col-left">
+      <div class="step-left-stack">
+        <div class="step-left-top">
+          <span class="step-label">Step 11</span>
+          <span class="step-title">
+            <span class="step-title-main">Problem-Solving</span>
+            <span class="step-title-spark">(Custom Elements = New Prompts)</span>
+          </span>
+        </div>
+        <div class="step-left-mid">If not one than another</div>
+        <div class="step-left-desc">Sometimes, Cursor couldn’t pull off what I wanted — a complex interaction, a micro-animation, or a custom component. So I took the idea to <b>Grok AI</b> or <b>Gemini</b> or <b>Perplexity</b>. I gave it context, a visual reference, and asked for a working code snippet. Once it looked good in preview, I brought it back to Cursor and had it integrate the code into my site. One prompt here. One there. And just like that — it worked.</div>
+      </div>
+    </div>
+    <div class="step-col step-col-right">
+      <div class="step-right-content step12-graphic-wrapper" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+        <video 
+          class="step11-graphic-video"
+          src="videos/Step-5-BG.mp4"
+          autoplay
+          loop
+          muted
+          playsinline
+          aria-hidden="true"
+          tabindex="-1"
+          style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,0.2);"
+        ></video>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Step 12 Section -->
+<section class="step-section step-section-12 horizontal-card" id="step-12" aria-label="Step 12" style="position:relative;overflow:hidden;">
+  <video class="step12-bg-video" src="videos/Step-5-BG.mp4" autoplay loop muted playsinline aria-hidden="true" tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;"></video>
+  <div class="step12-overlay" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(4,8,15,0.80);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:1;pointer-events:none;"></div>
+  <div class="step-container step12-container" style="position:relative;z-index:2;">
+    <div class="step-col step-col-left">
+      <div class="step-left-stack">
+        <div class="step-left-top">
+          <span class="step-label">Step 12</span>
+          <span class="step-title">
+            <span class="step-title-main">Satisfaction</span>
+            <span class="step-title-spark">(It’s Ready to Launch)</span>
+          </span>
+        </div>
+        <div class="step-left-mid">No devs. No drag-and-drop.</div>
+        <div class="step-left-desc">After a few rounds of tweaks, fixes, and fun hacks, the site was ready. Everything was structured, responsive, and fully mine—built with nothing but prompts, curiosity, and persistence. From a blank idea to a full, live website—this was never about replacing anyone. It was about proving that designers can build too now.</div>
+      </div>
+    </div>
+    <div class="step-col step-col-right">
+      <div class="step-right-content step12-graphic-wrapper" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+        <video 
+          class="step12-graphic-video"
+          src="videos/Step-5-BG.mp4"
+          autoplay
+          loop
+          muted
+          playsinline
+          aria-hidden="true"
+          tabindex="-1"
+          style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,0.2);"
+        ></video>
+      </div>
+    </div>
+  </div>
+</section>
+      </div> <!-- Close horizontal-wrapper -->
+    </div> <!-- Close horizontal-container -->
+    
+    <!-- FAQ Section -->
+    <section class="faq-section dark-bg section-animate-stagger" id="faq" aria-label="Frequently asked questions">
+                            <div class="faq-container section-animate-fade">
+                <div class="faq-header">
+                    <h2 class="faq-title">FAQ</h2>
+                    <p class="faq-subtitle">If you're wondering how I pulled off certain things, you might just find the answers here.</p>
+                </div>
+                <div class="faq-list">
+                    <article class="faq-item">
+                        <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-1">
+                            <span>What services do you offer?</span>
+                            <span class="faq-icon" aria-hidden="true">+</span>
+                        </button>
+                        <div class="faq-answer" id="faq-answer-1" aria-hidden="true">
+                            <p>We offer comprehensive digital solutions including web development, mobile apps, UX/UI design, and strategic consulting. Our team specializes in modern technologies and innovative approaches to solve complex business challenges.</p>
+                        </div>
+                    </article>
+                    <article class="faq-item">
+                        <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-2">
+                            <span>How long does a typical project take?</span>
+                            <span class="faq-icon" aria-hidden="true">+</span>
+                        </button>
+                        <div class="faq-answer" id="faq-answer-2" aria-hidden="true">
+                            <p>Project timelines vary based on complexity and scope. Simple websites typically take 4-6 weeks, while complex applications can take 3-6 months. We provide detailed timelines during our initial consultation and keep you updated throughout the process.</p>
+                        </div>
+                    </article>
+                    <article class="faq-item">
+                        <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-3">
+                            <span>Do you provide ongoing support?</span>
+                            <span class="faq-icon" aria-hidden="true">+</span>
+                        </button>
+                        <div class="faq-answer" id="faq-answer-3" aria-hidden="true">
+                            <p>Yes, we offer comprehensive ongoing support including maintenance, updates, performance optimization, and technical support. We believe in building long-term partnerships to ensure your continued success.</p>
+                        </div>
+                    </article>
+                    <article class="faq-item">
+                        <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-4">
+                            <span>What technologies do you use?</span>
+                            <span class="faq-icon" aria-hidden="true">+</span>
+                        </button>
+                        <div class="faq-answer" id="faq-answer-4" aria-hidden="true">
+                            <p>We use modern, industry-standard technologies including React, Vue.js, Node.js, Python, and cloud platforms like AWS and Azure. We choose the best technology stack for each project based on requirements and scalability needs.</p>
+                        </div>
+                    </article>
+                    <article class="faq-item">
+                        <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-5">
+                            <span>How do you ensure project quality?</span>
+                            <span class="faq-icon" aria-hidden="true">+</span>
+                        </button>
+                        <div class="faq-answer" id="faq-answer-5" aria-hidden="true">
+                            <p>We follow rigorous quality assurance processes including code reviews, automated testing, user acceptance testing, and performance optimization. Our team maintains high standards throughout development to deliver exceptional results.</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+        <!-- Contact Section -->
+        <section class="contact-section dark-bg section-animate" id="contact" aria-label="Book a call">
+            <div class="contact-content section-animate-fade">
+                <div class="contact-text">
+                        <h2 class="contact-title">Contact <span class="highlight">Codless</span></h2>
+                </div>
+                <div class="contact-form-container">
+                    <div class="contact-form">
+                    <h3>Ready to Transform Your Ideas?</h3>
+                    <p>Let's discuss how we can bring your vision to life with innovative solutions.</p>
+                    <button type="button" class="cta-button">Schedule a Call</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="footer-container">
+            <nav class="footer-nav" aria-label="Footer navigation">
+                <div class="footer-links-primary">
+                    <a href="#about">About Codless</a>
+                    <a href="#blog">Blog</a>
+                    <a href="#contact">Contact Codless</a>
+                </div>
+            </nav>
+            <div class="footer-main">
+                <div class="footer-links-secondary">
+                    <div class="footer-column">
+                        <a href="#about">About Codless</a>
+                        <a href="#blog">Blog</a>
+                        <a href="#contact">Contact</a>
+                    </div>
+                </div>
+                <div class="footer-newsletter">
+                    <h3>Stay Updated</h3>
+                    <form class="newsletter-form" aria-label="Newsletter subscription">
+                        <label for="newsletter-email" class="sr-only">Email address</label>
+                        <input type="email" id="newsletter-email" placeholder="Enter your email" aria-describedby="newsletter-error" required>
+                        <button type="submit" aria-label="Subscribe to newsletter">→</button>
+                    </form>
+                    <div id="newsletter-error" class="sr-only" role="alert"></div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-contact">
+                        <a href="mailto:hello@codless.com">hello@codless.com</a>
+                        <p>© 2024 Codless. All rights reserved.</p>
+                </div>
+                <div class="footer-legal">
+                    <a href="#privacy">Privacy Policy</a>
+                        <a href="#terms">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        </div>
+    <script src="script.js"></script>
+    <!-- GSAP and ScrollTrigger CDN for robust animation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+</body>
+</html>
