@@ -1062,8 +1062,10 @@ const HorizontalScroll = {
         trigger: container,
         pin: true,
         scrub: 1, // Smoothly scrubs the animation
+        start: "top top",
         end: () => `+=${wrapper.scrollWidth - window.innerWidth}`,
         invalidateOnRefresh: true, // Recalculates values on window resize
+        pinType: "transform",
       },
     });
 
