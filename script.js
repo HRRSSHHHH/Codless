@@ -291,105 +291,63 @@ const LenisSmoothScrolling = {
 
 const Navigation = {
   init() {
-    this.navbar = safeQuerySelector('.navbar');
     this.hamburger = safeQuerySelector('.hamburger');
-    this.navbarTabs = safeQuerySelectorAll('.navbar-tab');
+    this.overlay = safeQuerySelector('#mobile-nav-overlay');
+    this.closeBtn = safeQuerySelector('#close-nav-btn');
+    this.navTabs = safeQuerySelectorAll('.mobile-nav-tab');
     
-    if (!this.navbar) {
-      console.warn('Navigation element not found');
+    if (!this.hamburger || !this.overlay) {
+      console.warn('Navigation elements for overlay menu not found');
       return;
     }
 
-    // Hide navbar during loading
-    this.navbar.style.display = 'none';
+    this.setupEventListeners();
+    this.assignStaggerIndexes();
+  },
 
-    if (this.hamburger) {
-      this.setupEventListeners();
-    }
-    this.setupKeyboardNavigation();
+  // Assigns a CSS variable to each nav tab for staggered animation
+  assignStaggerIndexes() {
+    this.navTabs.forEach((tab, index) => {
+      tab.style.setProperty('--i', index);
+    });
   },
 
   setupEventListeners() {
-    // Hamburger menu toggle
-    this.hamburger.addEventListener('click', (e) => {
-      e.preventDefault();
-      this.handleToggleMobileMenu();
+    // Hamburger icon opens the menu
+    this.hamburger.addEventListener('click', () => this.openMenu());
+
+    // Close button closes the menu
+    this.closeBtn.addEventListener('click', () => this.closeMenu());
+
+    // Clicking any nav link closes the menu
+    this.navTabs.forEach(tab => {
+      tab.addEventListener('click', () => this.closeMenu());
     });
 
-    // Close mobile menu when clicking on nav links
-    this.navbarTabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        this.handleCloseMobileMenu();
-      });
-    });
-
-    // Close mobile menu when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!this.navbar.contains(e.target) && this.hamburger.classList.contains('active')) {
-        this.handleCloseMobileMenu();
-      }
-    });
-
-    // Handle escape key
+    // Pressing Escape key closes the menu
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        this.handleCloseMobileMenu();
-        this.hamburger.focus();
+      if (e.key === 'Escape' && this.overlay.classList.contains('active')) {
+        this.closeMenu();
       }
     });
   },
   
-  setupKeyboardNavigation() {
-    // Handle keyboard navigation for nav links
-    this.navbarTabs.forEach((tab, index) => {
-      tab.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-          e.preventDefault();
-          const nextIndex = (index + 1) % this.navbarTabs.length;
-          this.navbarTabs[nextIndex].focus();
-        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-          e.preventDefault();
-          const prevIndex = (index - 1 + this.navbarTabs.length) % this.navbarTabs.length;
-          this.navbarTabs[prevIndex].focus();
-        }
-      });
-    });
-  },
-
-  handleToggleMobileMenu() {
-    const isActive = this.hamburger.classList.contains('active');
-    
-    if (isActive) {
-      this.handleCloseMobileMenu();
-    } else {
-      this.handleOpenMobileMenu();
+  openMenu() {
+    if (LenisSmoothScrolling.lenis) {
+      LenisSmoothScrolling.lenis.stop(); // Stop page scrolling
     }
-  },
-
-  handleOpenMobileMenu() {
-    const navbarList = this.navbar.querySelector('.navbar-list');
+    document.body.style.overflow = 'hidden'; // Fallback for no Lenis
     this.hamburger.classList.add('active');
-    this.hamburger.setAttribute('aria-expanded', 'true');
-    
-    if (navbarList) {
-      navbarList.classList.add('active');
-    }
-    
-    // Focus first nav item for accessibility
-    const firstNavItem = this.navbarTabs[0];
-    if (firstNavItem) {
-      firstNavItem.focus();
-    }
+    this.overlay.classList.add('active');
   },
 
-  handleCloseMobileMenu() {
-    const navbarList = this.navbar.querySelector('.navbar-list');
-    this.hamburger.classList.remove('active');
-    this.hamburger.setAttribute('aria-expanded', 'false');
-    
-    if (navbarList) {
-      navbarList.classList.remove('active');
+  closeMenu() {
+    if (LenisSmoothScrolling.lenis) {
+      LenisSmoothScrolling.lenis.start(); // Resume page scrolling
     }
+    document.body.style.overflow = ''; // Fallback for no Lenis
+    this.hamburger.classList.remove('active');
+    this.overlay.classList.remove('active');
   }
 };
 
@@ -1035,14 +993,246 @@ const ScrollCTA = {
   }
 };
 
+// ============================================================================
+// Particle Globe Module (SOLAR FLARE VERSION)
+// ============================================================================
+
+const ParticleGlobe = {
+  init() {
+    this.container = safeQuerySelector('#particle-globe-container');
+    if (!this.container) return;
+
+    this.isRendered = false; 
+    this.clickPoint = new THREE.Vector3();
+    this.clickStrength = 0;
+
+    // --- NEW: Solar flare effect properties ---
+    this.noise = new SimplexNoise();
+    this.clock = new THREE.Clock();
+    this.NOISE_FREQUENCY = 0.3;
+    this.NOISE_AMPLITUDE = 0.45;
+    this.NOISE_SPEED = 0.03;
+    this.baseColor = new THREE.Color('#508AA8'); 
+    this.hotColor = new THREE.Color('#DE6B48');  
+    // ------------------------------------------
+
+    this.scene = new THREE.Scene();
+    this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+    this.camera.position.z = 9;
+    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    
+    this.PARTICLE_COUNT = 20000; // Updated particle count
+    this.PARTICLE_SIZE = 0.04;
+    this.GLOBE_RADIUS = 5;
+    this.MOUSE_INFLUENCE_RADIUS = 2;
+    this.MOUSE_REPEL_STRENGTH = 8;
+    this.mouse = new THREE.Vector2(-100, -100);
+    this.raycaster = new THREE.Raycaster();
+
+    this.setupGlobe();
+    this.setupEventListeners();
+    this.animate();
+  },
+
+  setupGlobe() {
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.container.appendChild(this.renderer.domElement);
+
+    this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+    this.controls.enableDamping = true;
+    this.controls.dampingFactor = 0.05;
+    this.controls.autoRotate = true;
+    this.controls.autoRotateSpeed = 3; 
+    this.controls.enablePan = false;
+    this.controls.enableZoom = false;
+    this.controls.enableRotate = true;
+
+    this.intersectionSphere = new THREE.Mesh(
+        new THREE.SphereGeometry(this.GLOBE_RADIUS, 32, 32),
+        new THREE.MeshBasicMaterial({ visible: false, side: THREE.DoubleSide })
+    );
+    this.scene.add(this.intersectionSphere);
+
+    // --- NEW: Particle creation now includes colors ---
+    const positions = new Float32Array(this.PARTICLE_COUNT * 3);
+    const colors = new Float32Array(this.PARTICLE_COUNT * 3); // Array for colors
+    for (let i = 0; i < this.PARTICLE_COUNT; i++) {
+        const u = Math.random(), v = Math.random();
+        const theta = 2 * Math.PI * u, phi = Math.acos(2 * v - 1);
+        const x = this.GLOBE_RADIUS * Math.sin(phi) * Math.cos(theta);
+        const y = this.GLOBE_RADIUS * Math.sin(phi) * Math.sin(theta);
+        const z = this.GLOBE_RADIUS * Math.cos(phi);
+        positions[i * 3] = x;
+        positions[i * 3 + 1] = y;
+        positions[i * 3 + 2] = z;
+        this.baseColor.toArray(colors, i * 3); // Set initial color
+    }
+    // ------------------------------------------------
+
+    this.originalPositions = new Float32Array(positions);
+    this.animatedPositions = new Float32Array(positions);
+    const particleGeometry = new THREE.BufferGeometry();
+    particleGeometry.setAttribute('position', new THREE.BufferAttribute(this.animatedPositions, 3));
+    particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3)); // Set color attribute
+    
+    // --- NEW: Updated material and texture ---
+    const texture = this.createParticleTexture();
+    const particleMaterial = new THREE.PointsMaterial({
+        size: this.PARTICLE_SIZE, map: texture,
+        transparent: true, blending: THREE.AdditiveBlending,
+        depthWrite: false, sizeAttenuation: true,
+        vertexColors: true // Enable vertex colors
+    });
+    // -----------------------------------------
+
+    this.particles = new THREE.Points(particleGeometry, particleMaterial);
+    this.scene.add(this.particles);
+  },
+
+  // --- NEW: Updated particle texture for a fiery look ---
+  createParticleTexture() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 128; canvas.height = 128;
+      const context = canvas.getContext('2d');
+      const gradient = context.createRadialGradient(64, 64, 0, 64, 64, 64);
+      gradient.addColorStop(0, 'rgba(255,255,255,1)');
+      gradient.addColorStop(0.2, 'rgba(255,255,255,1)');
+      gradient.addColorStop(0.5, '#DE6B48');
+      gradient.addColorStop(1, 'rgba(255,100,0,0)');
+      context.fillStyle = gradient;
+      context.fillRect(0, 0, 128, 128);
+      return new THREE.CanvasTexture(canvas);
+  },
+  // ----------------------------------------------------
+
+  setupEventListeners() {
+    this.onWindowResize = this.onWindowResize.bind(this);
+    this.onMouseMove = this.onMouseMove.bind(this);
+    this.onMouseLeave = this.onMouseLeave.bind(this);
+    this.onMouseClick = this.onMouseClick.bind(this);
+    window.addEventListener('resize', this.onWindowResize, false);
+    this.container.addEventListener('mousemove', this.onMouseMove, false);
+    this.container.addEventListener('mouseleave', this.onMouseLeave, false);
+    this.container.addEventListener('click', this.onMouseClick, false);
+  },
+
+  onWindowResize() {
+    if (!this.container) return;
+    const width = this.container.clientWidth;
+    const height = this.container.clientHeight;
+    if (width === 0 || height === 0) return;
+    this.camera.aspect = width / height;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(width, height);
+  },
+
+  onMouseMove(event) {
+    const rect = this.container.getBoundingClientRect();
+    this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+  },
+
+  onMouseClick() {
+    this.raycaster.setFromCamera(this.mouse, this.camera);
+    const intersects = this.raycaster.intersectObject(this.intersectionSphere);
+    if (intersects.length > 0) {
+      this.clickPoint.copy(intersects[0].point);
+      this.clickStrength = 15;
+    }
+  },
+
+  onMouseLeave() {
+    this.mouse.x = -100; this.mouse.y = -100;
+  },
+
+  animate() {
+    requestAnimationFrame(this.animate.bind(this));
+
+    if (!this.isRendered && this.container.clientWidth > 0) {
+      this.onWindowResize();
+      this.isRendered = true;
+    }
+    
+    // --- NEW: Core animation logic updated for solar flare effect ---
+    const elapsedTime = this.clock.getElapsedTime();
+    this.raycaster.setFromCamera(this.mouse, this.camera);
+    const intersects = this.raycaster.intersectObject(this.intersectionSphere);
+    const mouse3D = (intersects.length > 0) ? intersects[0].point : new THREE.Vector3();
+    
+    const positionAttribute = this.particles.geometry.attributes.position;
+    const colorAttribute = this.particles.geometry.attributes.color; // Get color attribute
+
+    if (this.clickStrength > 0) {
+      this.clickStrength *= 0.95;
+    }
+    if (this.clickStrength < 0.01) {
+      this.clickStrength = 0;
+    }
+
+    for (let i = 0; i < this.PARTICLE_COUNT; i++) {
+        const i3 = i * 3;
+        const originalPos = new THREE.Vector3(this.originalPositions[i3], this.originalPositions[i3 + 1], this.originalPositions[i3 + 2]);
+        const animatedPos = new THREE.Vector3(positionAttribute.getX(i), positionAttribute.getY(i), positionAttribute.getZ(i));
+
+        // 1. Calculate base flame shimmer from noise
+        const normal = originalPos.clone().normalize();
+        const noiseValue = this.noise.noise3D(
+            originalPos.x * this.NOISE_FREQUENCY,
+            originalPos.y * this.NOISE_FREQUENCY,
+            originalPos.z * this.NOISE_FREQUENCY + (elapsedTime * this.NOISE_SPEED)
+        );
+        const shimmerOffset = normal.multiplyScalar(noiseValue * this.NOISE_AMPLITUDE);
+        const shimmeringPos = originalPos.clone().add(shimmerOffset);
+        
+        // 2. Set particle color based on noise
+        const normalizedNoise = (noiseValue + 1) * 0.5;
+        const currentColor = new THREE.Color();
+        currentColor.copy(this.baseColor).lerp(this.hotColor, normalizedNoise);
+        colorAttribute.setXYZ(i, currentColor.r, currentColor.g, currentColor.b);
+        
+        // 3. Add hover and click forces on top of the shimmer
+        const worldShimmeringPos = shimmeringPos.clone().applyMatrix4(this.particles.matrixWorld);
+        let totalDisplacement = new THREE.Vector3();
+        
+        const hoverDistance = worldShimmeringPos.distanceTo(mouse3D);
+        if (hoverDistance < this.MOUSE_INFLUENCE_RADIUS) {
+            const hoverDirection = worldShimmeringPos.clone().sub(mouse3D).normalize();
+            const hoverRepelStrength = ((this.MOUSE_INFLUENCE_RADIUS - hoverDistance) / this.MOUSE_INFLUENCE_RADIUS) * this.MOUSE_REPEL_STRENGTH;
+            totalDisplacement.add(hoverDirection.multiplyScalar(hoverRepelStrength));
+        }
+
+        if (this.clickStrength > 0) {
+            const clickDistance = worldShimmeringPos.distanceTo(this.clickPoint);
+            const CLICK_INFLUENCE_RADIUS = 3;
+            if (clickDistance < CLICK_INFLUENCE_RADIUS) {
+                const clickDirection = worldShimmeringPos.clone().sub(this.clickPoint).normalize();
+                const clickPushStrength = ((CLICK_INFLUENCE_RADIUS - clickDistance) / CLICK_INFLUENCE_RADIUS) * this.clickStrength;
+                totalDisplacement.add(clickDirection.multiplyScalar(clickPushStrength));
+            }
+        }
+        
+        // 4. Calculate final position and smoothly animate towards it
+        const worldTargetPos = worldShimmeringPos.clone().add(totalDisplacement);
+        const targetPos = worldTargetPos.clone().applyMatrix4(this.particles.matrixWorld.clone().invert());
+        
+        animatedPos.lerp(targetPos, 0.08);
+        positionAttribute.setXYZ(i, animatedPos.x, animatedPos.y, animatedPos.z);
+    }
+    positionAttribute.needsUpdate = true;
+    colorAttribute.needsUpdate = true; // IMPORTANT: Tell three.js colors have changed
+    // -----------------------------------------------------------------
+    
+    this.controls.update();
+    this.renderer.render(this.scene, this.camera);
+  }
+};
 
 // ============================================================================
-// Horizontal Scroll Module (FIXED)
+// Horizontal Scroll Module (UPGRADED with 3D Fly-in)
 // ============================================================================
 
 const HorizontalScroll = {
   init() {
-    // We must register the plugin to use it
     gsap.registerPlugin(ScrollTrigger);
 
     const container = document.querySelector(".horizontal-container");
@@ -1054,39 +1244,91 @@ const HorizontalScroll = {
       return;
     }
 
-    // Main horizontal scroll tween
+    // This main tween handles the horizontal scrolling of the entire section
     const horizontalTween = gsap.to(wrapper, {
       x: () => `-${wrapper.scrollWidth - window.innerWidth}px`,
       ease: "none",
       scrollTrigger: {
         trigger: container,
         pin: true,
-        scrub: 1, // Smoothly scrubs the animation
-        start: "top top",
+        scrub: 1,
         end: () => `+=${wrapper.scrollWidth - window.innerWidth}`,
-        invalidateOnRefresh: true, // Recalculates values on window resize
+        invalidateOnRefresh: true,
         pinType: "transform",
       },
     });
 
-    // Animate each card as it comes into view within the horizontal scroll
+    // Animate each horizontal card as it scrolls into view
     horizontalSections.forEach(section => {
-      gsap.from(section.querySelector('.step-container'), {
-        y: 100,
-        opacity: 0,
+      // We apply a 3D "fly-in" from the right
+      gsap.from(section, {
+        x: 200,                 // Start 200px to the right
+        rotateY: -30,           // Rotate on the Y-axis (from the right)
+        translateZ: -300,       // Start "further away" in 3D space
+        autoAlpha: 0,           // Fade in
         ease: 'power2.out',
         scrollTrigger: {
           trigger: section,
-          containerAnimation: horizontalTween, // Link to the main horizontal tween
-          start: 'left 80%', // Start when the left of the card is 80% from the left of the viewport
-          end: 'left 50%', // End when the left of the card is at the center
-          scrub: true,
+          // This is the key: it links the card's animation to the main horizontal scroll
+          containerAnimation: horizontalTween,
+          // Defines the window in which the animation occurs
+          start: 'left 90%', // Starts when the card's left edge is 90% across the screen
+          end: 'left 60%',   // Finishes when it reaches 60%
+          scrub: 1.5,
         },
       });
     });
 
-    console.log("✅ Horizontal scroll initialized successfully.");
+    console.log("✅ Horizontal scroll with 3D fly-in animation initialized successfully.");
   }
+};
+
+// ============================================================================
+// Card Stack Animation Module (UPGRADED - 3D Perspective Fly-In)
+// ============================================================================
+
+const CardStackAnimation = {
+    init() {
+        if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+            console.warn('GSAP or ScrollTrigger not available for CardStackAnimation');
+            return;
+        }
+
+        gsap.registerPlugin(ScrollTrigger);
+        const sections = gsap.utils.toArray(".card-stack-container .step-section");
+
+        if (!sections.length) {
+            console.warn("Card stack elements for animation not found.");
+            return;
+        }
+
+        // Set the z-index for each section to ensure they stack correctly.
+        sections.forEach((section, i) => {
+            gsap.set(section, { zIndex: i });
+        });
+
+        // Animate each section (except the first one) with a 3D effect.
+        sections.forEach((section, i) => {
+            if (i === 0) return; // Skip the first section.
+
+            // Animate from a state of being rotated, distant, and transparent.
+            gsap.from(section, {
+                y: 150,                 // Start 150px down
+                rotateX: -45,           // Rotate on the X-axis
+                translateZ: -300,       // Start "further away" in 3D space
+                autoAlpha: 0,           // Fade in (opacity + visibility)
+                ease: 'power2.out',
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top bottom", // Animation starts when section top hits viewport bottom
+                    end: "top 30%",      // Animation completes when section top is 30% from viewport top
+                    scrub: 1.5,
+                }
+            });
+        });
+
+        console.log("✅ 3D Perspective card stack animation initialized successfully.");
+    }
 };
 // ============================================================================
 // Main Application Initialization
@@ -1109,7 +1351,8 @@ class CodlessApp {
       HeaderAnimations,
       TextAnimations,
       LenisSmoothScrolling,
-      ScrollCTA
+      ScrollCTA,
+      ParticleGlobe
     ];
   }
 
@@ -2032,26 +2275,30 @@ const NavbarScrollBehavior = {
 };
 
 // ============================================================================
-// App Initialization
+// App Initialization (REVISED)
 // ============================================================================
 document.addEventListener('DOMContentLoaded', () => {
   const app = new CodlessApp();
   app.init();
 
-  // Initialize NavbarScrollBehavior and HorizontalScroll after the page is fully loaded.
+  // Initialize all scroll-dependent animations after the page is fully loaded.
+  // This ensures layout is stable and all trigger points are calculated correctly.
   window.addEventListener('load', () => {
-    // A small delay ensures all elements are stable and Lenis is ready.
     setTimeout(() => {
         NavbarScrollBehavior.init();
-        HorizontalScroll.init(); // <-- FIXED: Initialize after full page load.
-    }, 500); 
+        CardStackAnimation.init(); // <-- Initialize revised card stack here
+        HorizontalScroll.init();   // <-- Initialize horizontal scroll here
+
+        // A single refresh after all scroll-based modules are initialized
+        ScrollTrigger.refresh();
+        console.log("✅ All scroll-based animations initialized and refreshed.");
+    }, 100); // A small timeout ensures everything has settled.
   });
-  
+
   // Final check for smooth scrolling readiness
   setTimeout(() => {
     if (LenisSmoothScrolling.lenis) {
       console.log('🚀 Website ready with smooth scrolling!');
-      // Add a class to body for CSS optimizations
       document.body.classList.add('smooth-scroll-ready');
     } else {
       console.log('⚠️ Website ready with native scrolling');
