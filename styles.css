@@ -2396,3 +2396,19 @@ body.native-scroll-ready {
         border-radius: 40px; /* Slightly smaller radius than the container */
     }
 }
+/* ============================================================================ */
+/* Responsive Styles for Particle Globe
+/* ============================================================================ */
+
+@media (max-width: 768px) {
+  #particle-globe-container {
+    /* Override the default full-screen size */
+    width: 200px;
+    height: 200px;
+
+    /* Center the smaller globe within the section */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
