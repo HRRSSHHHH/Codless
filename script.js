@@ -847,15 +847,11 @@ const SectionAnimations = {
 };
 
 // ============================================================================
-// Tools Section Animation Module
+// Tools Section Animation Module (Responsive)
 // ============================================================================
 
 const ToolsAnimation = {
   init() {
-    this.setupToolsAnimation();
-  },
-
-  setupToolsAnimation() {
     const toolMoons = safeQuerySelectorAll('.tool-moon');
     const toolsOrbit = safeQuerySelector('.tools-orbit');
     
@@ -864,74 +860,63 @@ const ToolsAnimation = {
       return;
     }
 
-    // Keep the CSS animation for orbit motion (it was working)
-    // Just enhance it with GSAP for hover effects
+    // Check if the user is on a touch device
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-    // Enhanced hover animations
-    toolMoons.forEach((moon) => {
-      const icon = moon.querySelector('.tool-icon');
-      const label = moon.querySelector('.tool-label');
-      
-      // Initial state
-      gsap.set(label, { opacity: 0, scale: 0.8, y: 10 });
-      
-      moon.addEventListener('mouseenter', () => {
-        // Pause the CSS animation on hover
-        moon.style.animationPlayState = 'paused';
-        
-        gsap.to(icon, {
-          scale: 1.3,
-          rotation: 360,
-          duration: 0.4,
-          ease: "back.out(1.7)"
-        });
-        
-        gsap.to(label, {
-          opacity: 1,
-          scale: 1,
-          y: 0,
-          duration: 0.4,
-          ease: "back.out(1.7)"
-        });
+    if (isTouchDevice) {
+      // --- MOBILE: TAP-TO-REVEAL LOGIC ---
+      toolMoons.forEach(moon => {
+        const label = moon.querySelector('.tool-label');
+        gsap.set(label, { autoAlpha: 0, scale: 0.8, y: 10 });
 
-        // Add glow effect
-        gsap.to(moon, {
-          filter: "brightness(1.2) drop-shadow(0 0 10px rgba(222, 107, 72, 0.5))",
-          duration: 0.3,
-          ease: "power2.out"
+        moon.addEventListener('click', (e) => {
+          e.preventDefault();
+          const currentLabel = moon.querySelector('.tool-label');
+          const isVisible = gsap.getProperty(currentLabel, "autoAlpha") === 1;
+
+          // First, hide all other labels to prevent clutter
+          toolMoons.forEach(otherMoon => {
+            if (otherMoon !== moon) {
+              gsap.to(otherMoon.querySelector('.tool-label'), {
+                autoAlpha: 0, scale: 0.8, y: 10,
+                duration: 0.3, ease: "power2.out"
+              });
+            }
+          });
+
+          // Then, toggle the visibility of the tapped label
+          gsap.to(currentLabel, {
+            autoAlpha: isVisible ? 0 : 1,
+            scale: isVisible ? 0.8 : 1,
+            y: isVisible ? 10 : 0,
+            duration: 0.4,
+            ease: "back.out(1.7)"
+          });
         });
       });
-      
-      moon.addEventListener('mouseleave', () => {
-        // Resume the CSS animation
-        moon.style.animationPlayState = 'running';
-        
-        gsap.to(icon, {
-          scale: 1,
-          rotation: 0,
-          duration: 0.4,
-          ease: "power2.out"
-        });
-        
-        gsap.to(label, {
-          opacity: 0,
-          scale: 0.8,
-          y: 10,
-          duration: 0.4,
-          ease: "power2.out"
-        });
 
-        // Remove glow effect
-        gsap.to(moon, {
-          filter: "brightness(1) drop-shadow(none)",
-          duration: 0.3,
-          ease: "power2.out"
+    } else {
+      // --- DESKTOP: HOVER-TO-REVEAL LOGIC ---
+      toolMoons.forEach((moon) => {
+        const icon = moon.querySelector('.tool-icon');
+        const label = moon.querySelector('.tool-label');
+        gsap.set(label, { opacity: 0, scale: 0.8, y: 10 });
+        
+        moon.addEventListener('mouseenter', () => {
+          moon.style.animationPlayState = 'paused';
+          gsap.to(icon, { scale: 1.3, duration: 0.4, ease: "back.out(1.7)" });
+          gsap.to(label, { opacity: 1, scale: 1, y: 0, duration: 0.4, ease: "back.out(1.7)" });
+        });
+        
+        moon.addEventListener('mouseleave', () => {
+          moon.style.animationPlayState = 'running';
+          gsap.to(icon, { scale: 1, duration: 0.4, ease: "power2.out" });
+          gsap.to(label, { opacity: 0, scale: 0.8, y: 10, duration: 0.4, ease: "power2.out" });
         });
       });
-    });
+    }
   }
 };
-
 // ============================================================================
 // Error Handling & Analytics
 // ============================================================================
