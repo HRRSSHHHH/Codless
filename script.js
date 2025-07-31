@@ -2002,6 +2002,11 @@ const CustomCursor = {
     this.cursor = safeQuerySelector('#custom-cursor');
     this.particlesContainer = safeQuerySelector('#cursor-particles');
     
+    // Disable custom cursor on mobile screens
+    if (window.matchMedia('(max-width: 768px)').matches) {
+      return;
+    }
+
     if (!this.cursor || !this.particlesContainer) {
       console.warn('Cursor elements not found');
       return;
