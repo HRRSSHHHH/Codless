@@ -15,9 +15,14 @@
   /* Heading Sizes */
   --h1-size: 80px;
   --h2-size: 56px;
-  --logo-size: 16px;
   --h3-size: 28px;
+  --h4-size: 22px;
   --body-size: 20px;
+  --caption-size: 14px;
+
+  /* Logo Sizes */
+  --logo-size: 16px;
+  
 
   /* Font Weights */
   --h1-weight: 900;
@@ -37,7 +42,18 @@
   --caption-line-height: 1.5;
   --caption-weight: 300;
 
-  /* Colors */
+  @media (max-width: 768px) {
+    /* Redefine typography sizes for mobile screens */
+    --h1-size: 40px;
+    --h2-size: 36px;
+    --logo-size: 14px;
+    --h3-size: 20px;
+    --body-size: 16px;
+    --button-size: 14px;
+    --caption-size: 12px;
+  }
+ 
+   /* Colors */
   --color-primary: #DE6B48;
   --color-secondary: #508AA8;
   --color-neutral-dark: #04080F;
@@ -380,76 +396,22 @@ body,
 /* Focus Styles for Accessibility */
 
 *:focus {
-  outline: 3px solid var(--color-secondary);
-  outline-offset: 2px;
-  border-radius: 2px;
+  outline: none;
 }
 
 /* Enhanced focus for interactive elements */
 button:focus,
 a:focus,
 input:focus {
-  outline: 3px solid var(--color-secondary);
-  outline-offset: 2px;
-  box-shadow: 0 0 0 2px var(--color-neutral-dark), 0 0 0 4px var(--color-secondary);
-}
-
-/* --- Navbar List: Horizontal, No Bullets, Proper Spacing --- */
-.navbar-list {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 4px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.navbar-list li {
-  margin: 0;
-  padding: 0;
-}
-
-.navbar-tab {
-  display: inline-block;
-  padding: 8px 12px;
-  border-radius: var(--radius-sm);
-  font-size: var(--button-size);
-  font-weight: var(--body-weight);
-  color: var(--color-neutral-light);
-  text-decoration: none;
-  transition: all var(--transition-fast);
-}
-
-.navbar-tab::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--color-primary);
-  opacity: 0;
-  border-radius: var(--radius-sm);
-  transition: opacity var(--transition-fast);
-  z-index: -1;
-}
-
-.navbar-tab:hover::before {
-  opacity: 0.3;
-}
-
-/* --- Fix for automatic scrolling bug --- */
-html,
-body {
-  scroll-behavior: auto !important;
-  /* Prevent unwanted smooth scroll on load */
+  outline: none;
+  box-shadow: none;
 }
 
 /* ============================================================================ */
-/* Navigation Styles */
+/* Navigation Styles (Refactored) */
 /* ============================================================================ */
 
+/* --- Main Navbar Container --- */
 .navbar {
   position: fixed;
   top: 8px;
@@ -460,21 +422,22 @@ body {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  width: auto;
-  max-width: none;
-  box-sizing: border-box;
-  background-color: rgba(4, 8, 15, 0.10);
+  background-color: rgba(16, 33, 63, 0.178);
   border-radius: var(--radius-md);
-  border: 0.1265px solid var(--color-neutral-light);
+  border: none;
+  box-shadow: inset 0 0 0 0.5px var(--color-neutral-light);
+  backdrop-filter: blur(16px);
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform;
-  backdrop-filter: blur(16px);
 }
 
 .navbar.navbar-hidden {
   transform: translateX(-50%) translateY(-100%) !important;
 }
 
+
+
+/* --- Navbar Sections (Left/Center) --- */
 .navbar-left {
   margin-right: 16px;
 }
@@ -486,30 +449,43 @@ body {
   align-items: center;
 }
 
-/* Logo font size and weight */
+/* --- Logo Styling (Final) --- */
 .navbar-logo {
   font-family: var(--font-heading);
   font-size: var(--logo-size);
   font-weight: var(--logo-weight);
   text-decoration: none;
+  color: var(--color-primary) !important; /* Always primary color */
+  transition: color var(--transition-fast);
 }
 
 .navbar-logo:hover {
-  color: var(--color-secondary);
-  text-decoration: none;
+  color: var(--color-secondary) !important; /* Always secondary on hover */
+}
+
+/* --- Navigation Links/Tabs --- */
+.navbar-list {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .navbar-tab {
-  color: var(--color-neutral-light);
-  text-decoration: none;
-  padding: var(--spacing-xs) var(--spacing-sm);
+  display: inline-block;
+  padding: 8px 16px;
   border-radius: var(--radius-sm);
   font-size: var(--button-size);
   font-weight: var(--body-weight);
+  text-decoration: none;
   position: relative;
-  transition: all var(--transition-fast);
+  transition: color var(--transition-fast);
+  color: var(--color-text-muted) !important; /* Default color for tabs */
 }
 
+/* Tab hover effect */
 .navbar-tab::before {
   content: "";
   position: absolute;
@@ -528,150 +504,172 @@ body {
   opacity: 0.3;
 }
 
-/* Modern Hamburger to X Animation */
+/* ============================================================================ */
+/* --- DEFINITIVE HAMBURGER & MOBILE NAVBAR STYLES --- */
+/* ============================================================================ */
+
+/* 1. Base styles for the hamburger icon container */
 .hamburger {
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 32px;
-  height: 32px;
+  display: none; /* Hidden on desktop by default */
   position: relative;
+  width: 44px;
+  height: 44px;
   background: none;
   border: none;
   cursor: pointer;
   z-index: 2100;
+  padding: 0;
 }
 
+/* 2. Base styles for the three lines */
 .hamburger-line {
   position: absolute;
-  left: 6px;
-  right: 6px;
+  top: 50%;
+  left: 10px;
+  right: 10px;
   height: 4px;
+  margin-top: -2px; /* Vertically center the 4px line */
   background: var(--color-neutral-light);
   border-radius: 2px;
-  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  pointer-events: none;
 }
 
-.hamburger-line:nth-child(1) {
-  top: 8px;
+/* 3. Initial "stack" position of the lines */
+.hamburger-line:nth-of-type(1) {
+  transform: translateY(-8px);
+}
+.hamburger-line:nth-of-type(3) {
+  transform: translateY(8px);
 }
 
-.hamburger-line:nth-child(2) {
-  top: 14px;
+/* 4. Base styles for the mobile navigation overlay */
+#mobile-nav-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 4000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden; /* Hidden by default */
+  pointer-events: none; /* Not interactive when hidden */
+  /* Add a transition with a delay for hiding the overlay */
+  transition: visibility 0s linear 0.8s; /* Delay matches ripple duration */
 }
 
-.hamburger-line:nth-child(3) {
-  top: 20px;
+/* The ripple is a pseudo-element on the overlay for a cleaner DOM */
+#mobile-nav-overlay::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1px;
+  height: 1px;
+  background: var(--color-neutral-dark);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  /* The transition is now on the base pseudo-element */
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -1;
 }
 
-.hamburger.active .hamburger-line:nth-child(1) {
-  top: 14px;
-  transform: rotate(45deg) translate(5px, 5px);
+/* When the overlay is active, the ripple expands. When it's removed, it reverses. */
+#mobile-nav-overlay.active::before {
+  transform: translate(-50%, -50%) scale(3000); /* Scale large enough to cover the screen */
 }
 
-.hamburger.active .hamburger-line:nth-child(2) {
+/* When overlay is active, make it visible immediately */
+#mobile-nav-overlay.active {
+  visibility: visible;
+  pointer-events: auto;
+  transition-delay: 0s; /* No delay when showing */
+}
+
+.mobile-nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}
+
+.mobile-nav-tab {
+  display: block;
+  font-family: orbitron, sans-serif;
+  font-size: var(--h3-size);
+  font-weight: 600;
+  color: var(--color-neutral-light);
+  text-decoration: none;
+  padding: var(--spacing-sm);
   opacity: 0;
-  transform: scale(0);
+  transform: translateY(20px);
+  transition: opacity 0.4s ease, transform 0.4s ease, color 0.2s ease;
 }
 
-.hamburger.active .hamburger-line:nth-child(3) {
-  top: 14px;
-  transform: rotate(-45deg) translate(5px, -5px);
+.mobile-nav-tab:hover {
+  color: var(--color-primary);
 }
 
-/* Mobile Navigation */
+/* Staggered animation for nav links when menu opens */
+#mobile-nav-overlay.active .mobile-nav-tab {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: calc(0.2s + (var(--i) * 0.05s)); /* Stagger delay using CSS variable */
+}
+
+/* Close Button */
+#close-nav-btn {
+  position: absolute;
+  bottom: var(--spacing-xl);
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.4s ease 0.5s, transform 0.4s ease 0.5s;
+}
+
+#mobile-nav-overlay.active #close-nav-btn {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.close-line {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 24px;
+  height: 2px;
+  background: var(--color-neutral-light);
+}
+
+.close-line:nth-child(1) {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.close-line:nth-child(2) {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+
+/* 5. All mobile-specific styles contained in one media query */
 @media (max-width: 768px) {
+  .navbar-center {
+    display: none; /* Hides the desktop nav links on mobile */
+  }
+
+  /* --- Main Navbar on Mobile --- */
   .navbar {
-    left: 8px !important;
-    right: 8px !important;
-    width: auto !important;
-    transform: translateY(0) !important;
-    position: fixed !important;
-    top: 0 !important;
-    margin: 0 !important;
-    padding: 8px 16px !important;
-    background: rgba(4, 8, 15, 0.10) !important;
-    z-index: 2000 !important;
-    border: none !important;
-    backdrop-filter: blur(16px) !important;
-    transition: transform 0.3s ease !important;
+    justify-content: space-between;
   }
-
-  .navbar.navbar-hidden {
-    transform: translateY(-100%) !important;
-  }
-
-  .hamburger {
-    display: flex;
-    position: absolute;
-    right: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  .navbar-list {
-    top: 100% !important;
-    border-radius: 0 0 var(--radius-md) var(--radius-md) !important;
-    margin-top: 0 !important;
-    display: none;
-    position: fixed;
-    top: 56px;
-    left: 0;
-    right: 0;
-    background: rgba(4, 8, 15, 0.95) !important;
-    backdrop-filter: blur(16px) !important;
-    -webkit-backdrop-filter: blur(16px) !important;
-    border: 0.1265px solid var(--color-neutral-light);
-    flex-direction: column;
-    padding: var(--spacing-md);
-    border-radius: 0 0 var(--radius-md) var(--radius-md);
-    box-shadow: var(--shadow-lg);
-    z-index: 1999;
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: all var(--transition-normal);
-  }
-
-  .navbar-list.active {
-    display: flex;
-    opacity: 1;
-    transform: translateY(0);
-    background: rgba(4, 8, 15, 0.95) !important;
-    backdrop-filter: blur(16px) !important;
-    -webkit-backdrop-filter: blur(16px) !important;
-  }
-
-  .navbar-tab {
-    width: 100%;
-    text-align: center;
-    padding: var(--spacing-sm);
-    border-radius: var(--radius-sm);
-    margin: 2px 0;
-    position: relative;
-    transition: all var(--transition-fast);
-  }
-
-  .navbar-tab::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--color-primary);
-    opacity: 0;
-    border-radius: var(--radius-sm);
-    transition: opacity var(--transition-fast);
-    z-index: -1;
-  }
-
-  .navbar-tab:hover::before {
-    opacity: 0.3;
+ .hamburger {
+    display: flex; /* This makes the hamburger visible on mobile */
   }
 }
-
 /* ============================================================================ */
 /* Hero Section */
 /* ============================================================================ */
@@ -829,7 +827,16 @@ body {
   .why-section {
     padding: var(--spacing-lg);
   }
-
+.why-description p {
+  font-size: var(--body-size);
+  font-weight: 200;
+  color: var(--color-text-muted);
+  word-wrap: var(--text-wrap);
+  hyphens: var(--hyphens);
+  orphans: 3;
+  widows: 3;
+  word-spacing: 0.05em;
+}
   .why-header {
     grid-template-columns: 1fr;
     gap: var(--spacing-lg);
@@ -880,11 +887,10 @@ body {
   transform: translate(-50%, -50%);
   z-index: 2;
   text-align: center;
-  font-family: var(--font-heading);
+  font-family: Orbitron, sans-serif;
   font-size: var(--h2-size);
   font-weight: 400;
   line-height: 1.2;
-  white-space: nowrap;
 }
 
 .tools-hover-caption {
@@ -894,7 +900,7 @@ body {
   transform: translateX(-50%);
   z-index: 2;
   text-align: center;
-  font-family: var(--font-body);
+  font-family: Urbanist, sans-serif;
   font-size: var(--caption-size);
   font-weight: var(--caption-weight);
   line-height: var(--caption-line-height);
@@ -1025,18 +1031,18 @@ body {
   }
 
   .tools-center-title {
-    font-size: var(--h3-size);
+    font-size: var(--h2-size);
     white-space: nowrap;
   }
 
   .tools-orbit {
-    width: 220px;
-    height: 90px;
+    width: 300px;
+    height: 150px;
   }
 
   .tool-moon {
-    --x-amplitude: 140px;
-    --y-amplitude: 55px;
+    --x-amplitude: 200px;
+    --y-amplitude: 100px;
     --wobble-multiplier: 8;
     --wobble-amplitude: 7px;
   }
@@ -1760,24 +1766,6 @@ input[aria-invalid="true"] {
   }
 }
 
-/* Prevent navbar tabs from wrapping to a new line */
-.navbar-center {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-width: 0;
-}
-
-.navbar-list {
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  white-space: nowrap;
-}
-
-.navbar-tab {
-  white-space: nowrap;
-}
 
 .section-animate-header {
   white-space: normal !important;
@@ -1802,16 +1790,8 @@ input[aria-invalid="true"] {
   white-space: pre;
 }
 
-.navbar.navbar-contrast {
-  background-color: rgba(212, 244, 221, 0.10) !important;
-  color: var(--color-neutral-dark) !important;
-  backdrop-filter: blur(16px) !important;
-}
 
-.navbar-logo,
-.navbar-tab {
-  color: var(--color-neutral-light) !important;
-}
+
 
 .typewriter-text-inner {
   display: inline;
@@ -1913,8 +1893,8 @@ input[aria-invalid="true"] {
 
 .lets-see-how-we-do-it-title {
   font-family: 'Orbitron', sans-serif;
-  font-size: 56px;
-  font-weight: 400;
+  font-size: var(--h2-size);
+  font-weight: h2-weight;
   line-height: 1.1;
   color: var(--color-primary);
   margin-bottom: var(--spacing-xl);
@@ -1924,7 +1904,7 @@ input[aria-invalid="true"] {
 .animated-header {
   display: block;
   text-align: center;
-  font-size: 56px;
+  font-size: var(--h2-size);
   font-family: 'Orbitron', sans-serif;
   font-weight: 400;
   color: var(--color-neutral-light);
@@ -1960,15 +1940,40 @@ input[aria-invalid="true"] {
   display: inline-block;
 }
 
+/* Corrected styling for the globe section */
 .lets-see-how-we-do-it-section {
   width: 100vw;
   height: 100vh;
+  padding: 40px;
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-neutral-dark, #04080F);
   overflow: hidden;
+  position: relative; /* This is important for positioning the background */
+  /* REMOVED the incorrect 'background' property */
+}
+
+/* Styles for the globe container (now separate) */
+#particle-globe-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0; /* Sits behind the content */
+}
+
+#particle-globe-container canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Ensure the title stays on top */
+.lets-see-how-we-do-it-section .lets-see-how-we-do-it-title {
+  position: relative;
+  z-index: 1; 
 }
 
 html,
@@ -1978,7 +1983,39 @@ body {
   overflow-x: hidden;
 }
 
-/* Step section animations */
+/* ============================================================================ */
+/* NEW: 3D Perspective Card Stack Styles
+/* ============================================================================ */
+.card-stack-container {
+    position: relative;
+    background-color: var(--color-neutral-dark);
+    
+    /* Crucial for 3D effect: creates the 3D space */
+    perspective: 800px;
+    -webkit-perspective: 800px;
+}
+
+.card-stack-container .step-section {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    min-height: 100vh;
+    overflow: hidden;
+    
+    /* Adds a card-like appearance */
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.2);
+}
+
+/* The first card shouldn't have a top border/radius initially */
+.card-stack-container .step-section:first-child {
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+}
+
 .step-section {
   position: relative;
   width: 100vw;
@@ -2296,4 +2333,59 @@ body.smooth-scroll-ready .move-in-section {
 /* Native scroll ready optimizations */
 body.native-scroll-ready {
   scroll-behavior: smooth;
+}
+/* ============================================================================ */
+/* Responsive Styles for Step Sections (Updated)
+/* ============================================================================ */
+
+@media (max-width: 768px) {
+    /* Adjust the main section padding and height for mobile */
+    .step-section {
+        padding: 40px 40px;
+        height: auto;
+        min-height: 100vh; /* Ensure it still takes up vertical space */
+    }
+
+    /* Change the two-column layout to a single, stacked column */
+    .step-container {
+        flex-direction: column;
+        gap: 40px;
+        text-align: left;
+        justify-content: left; /* Center the content vertically */
+    }
+
+    /* Center all text content */
+    .step-col-left,
+    .step-left-top {
+        align-items: left;
+    }
+
+    /* Adjust typography based on your new structure */
+    .step-left-mid {
+        font-size: var(--h2-size); /* As per your code snippet */
+        line-height: 1.3;
+        max-width: 100%;
+    }
+
+    .step-left-desc {
+        font-size: var(--font-body);
+        max-width: 100%;
+    }
+    
+    .step-label,
+    .step-title-main,
+    .step-title-spark {
+        font-size: var(--caption-size); /* As per your code snippet */
+    }
+
+    /* Style the image/video container to look like the framed image */
+    .step-right-content {
+        border-radius: 40px; 
+    }
+
+    /* Ensure the video/image inside the frame is also rounded */
+    .step-right-content video,
+    .step-right-content img {
+        border-radius: 40px; /* Slightly smaller radius than the container */
+    }
 }
