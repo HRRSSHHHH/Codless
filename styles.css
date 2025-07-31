@@ -747,9 +747,9 @@ input:focus {
 }
 
 .hero-intro {
-  font-family: var(--font-button);
+  font-family: urbanist, sans-serif;
   font-size: var(--button-size);
-  font-weight: var(--body-medium);
+  font-weight: var(--button-weight);
   color: var(--color-neutral-light);
   text-align: left;
   position: relative;
@@ -784,11 +784,46 @@ input:focus {
 
 @media (max-width: 768px) {
   .hero-section {
-    padding: 80px var(--spacing-lg) var(--spacing-lg);
-  }
-  .hero-title {
-    font-size: clamp(2rem, 6vw, 3rem);
-  }
+  /* This ensures the section is a positioning container for its children */
+  display: flex;
+  justify-content: center; /* Center content horizontally */
+  align-items: flex-end; /* Align content to the bottom */
+  padding: 0; /* Reset padding, we'll control it on the children */
+}
+
+.cta-container {
+  /* Position the CTA absolutely within the hero section */
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%); /* Center it horizontally */
+
+  /* Reset any previous styling to match the new layout */
+  background: none;
+  border: none;
+  backdrop-filter: none;
+  padding: 80px;
+}
+
+.hero-content {
+  width: 100%;
+  align-items: center;
+  text-align: center;
+  
+  /* Apply the bottom and side margins as padding */
+  padding: 100px 40px 60px 40px; 
+  box-sizing: border-box;
+}
+  
+  .hero-intro {
+  font-family: urbanist, sans-serif;
+  font-size: var(--caption-size);
+  font-weight: var(--caption-weight);
+  color: var(--color-neutral-light);
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
 }
 
 /* ============================================================================ */
@@ -1350,7 +1385,7 @@ input:focus {
 
 .cta-container .text {
   width: 100%;
-  font-family: var(--font-body);
+  font-family: urbanist, sans-serif;
   font-size: var(--caption-size);
   font-weight: var(--caption-weight);
   letter-spacing: 0.96px;
@@ -1369,7 +1404,7 @@ input:focus {
   opacity: 1;
   position: absolute;
   width: max-content;
-  left: 50%;
+  left: 68%;
   top: 50%;
   transform: translate(-50%, -50%);
   white-space: nowrap;
@@ -1468,6 +1503,103 @@ input:focus {
 }
 
 @media (max-width: 768px) {
+  .cta-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  font-family: var(--font-heading);
+  text-align: center;
+  position: fixed;
+  z-index: 100;
+  cursor: pointer;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  gap: 4px;
+  width: auto; /* Fixed width to ensure perfect centering */
+}
+
+.mouse-icon {
+  width: 20px;
+  height: 32px;
+  border: 1px solid var(--color-text-muted);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  animation: wobble 1.2s infinite ease-in-out;
+  transition: border-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scroll-wheel {
+  width: 4px;
+  height: 4px;
+  background-color: var(--color-text-muted);
+  border-radius: 50%;
+  position: absolute;
+  top: 4px;
+  align-self: center;
+  animation: bounceAndSpin 1.2s infinite;
+  transition: background-color 0.3s ease;
+}
+
+.cta-container .text {
+  width: 100%;
+  font-family: urbanist, sans-serif;
+  font-size: var(--caption-size);
+  font-weight: var(--caption-weight);
+  letter-spacing: 0.96px;
+  color: var(--color-text-muted);
+  transition: all 0.3s ease;
+  position: relative;
+  text-align: center;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.cta-text-main {
+  opacity: 1;
+  position: absolute;
+  width: max-content;
+  left: 80%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  text-align: center;
+}
+
+.cta-text-morph {
+  opacity: 0;
+  position: absolute;
+  width: max-content;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: var(--color-primary);
+  background: linear-gradient(90deg, var(--color-primary), #ff6b35, var(--color-primary));
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 8px rgba(222, 107, 72, 0.3));
+  white-space: nowrap;
+}
+
+.cta-container:hover .cta-text-main {
+  opacity: 0;
+  transform: translate(-50%, calc(-50% - 10px));
+}
+
+.cta-container:hover .cta-text-morph {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
   .contact-content {
     grid-template-columns: 1fr;
     gap: var(--spacing-xl);
