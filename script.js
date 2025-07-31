@@ -847,7 +847,7 @@ const SectionAnimations = {
 };
 
 // ============================================================================
-// Tools Section Animation Module (Responsive)
+// Tools Section Animation Module (Responsive with Tap-Wobble)
 // ============================================================================
 
 const ToolsAnimation = {
@@ -860,43 +860,50 @@ const ToolsAnimation = {
       return;
     }
 
-    // Check if the user is on a touch device
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
     if (isTouchDevice) {
-      // --- MOBILE: TAP-TO-REVEAL LOGIC ---
+      // --- MOBILE: TAP-TO-REVEAL LOGIC (WITH WOBBLE & PAUSE) ---
+      let activeMoon = null; // Variable to track the active moon
+
+      // A reusable function to reset a moon to its default state
+      const resetMoon = (moonToReset) => {
+        if (!moonToReset) return;
+        moonToReset.style.animationPlayState = 'running';
+        gsap.to(moonToReset.querySelector('.tool-icon'), { scale: 1, duration: 0.4, ease: "power2.out" });
+        gsap.to(moonToReset.querySelector('.tool-label'), { autoAlpha: 0, scale: 0.8, y: 10, duration: 0.4, ease: "power2.out" });
+      };
+
       toolMoons.forEach(moon => {
+        const icon = moon.querySelector('.tool-icon');
         const label = moon.querySelector('.tool-label');
         gsap.set(label, { autoAlpha: 0, scale: 0.8, y: 10 });
 
         moon.addEventListener('click', (e) => {
           e.preventDefault();
-          const currentLabel = moon.querySelector('.tool-label');
-          const isVisible = gsap.getProperty(currentLabel, "autoAlpha") === 1;
 
-          // First, hide all other labels to prevent clutter
-          toolMoons.forEach(otherMoon => {
-            if (otherMoon !== moon) {
-              gsap.to(otherMoon.querySelector('.tool-label'), {
-                autoAlpha: 0, scale: 0.8, y: 10,
-                duration: 0.3, ease: "power2.out"
-              });
-            }
-          });
+          // If a different moon is already active, reset it first
+          if (activeMoon && activeMoon !== moon) {
+            resetMoon(activeMoon);
+          }
 
-          // Then, toggle the visibility of the tapped label
-          gsap.to(currentLabel, {
-            autoAlpha: isVisible ? 0 : 1,
-            scale: isVisible ? 0.8 : 1,
-            y: isVisible ? 10 : 0,
-            duration: 0.4,
-            ease: "back.out(1.7)"
-          });
+          // Toggle the clicked moon
+          if (activeMoon === moon) {
+            // If it's already active, reset it and clear the state
+            resetMoon(moon);
+            activeMoon = null;
+          } else {
+            // Otherwise, activate it
+            moon.style.animationPlayState = 'paused';
+            gsap.to(icon, { scale: 1.3, duration: 0.4, ease: "back.out(1.7)" });
+            gsap.to(label, { autoAlpha: 1, scale: 1, y: 0, duration: 0.4, ease: "back.out(1.7)" });
+            activeMoon = moon; // Set the current moon as active
+          }
         });
       });
 
     } else {
-      // --- DESKTOP: HOVER-TO-REVEAL LOGIC ---
+      // --- DESKTOP: HOVER-TO-REVEAL LOGIC (NO CHANGES) ---
       toolMoons.forEach((moon) => {
         const icon = moon.querySelector('.tool-icon');
         const label = moon.querySelector('.tool-label');
