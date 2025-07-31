@@ -341,6 +341,13 @@ body,
   cursor: none !important;
 }
 
+@media (max-width: 768px) {
+  body,
+  * {
+    cursor: auto !important; /* Re-enable default cursor on mobile */
+  }
+}
+
 #custom-cursor {
   position: fixed;
   left: 0;
