@@ -994,7 +994,7 @@ const ScrollCTA = {
 };
 
 // ============================================================================
-// Particle Globe Module (SOLAR FLARE VERSION)
+// Particle Globe Module (with Mobile Tap Interaction & Auto-Rotate)
 // ============================================================================
 
 const ParticleGlobe = {
@@ -1002,11 +1002,10 @@ const ParticleGlobe = {
     this.container = safeQuerySelector('#particle-globe-container');
     if (!this.container) return;
 
+    this.isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     this.isRendered = false; 
     this.clickPoint = new THREE.Vector3();
     this.clickStrength = 0;
-
-    // --- NEW: Solar flare effect properties ---
     this.noise = new SimplexNoise();
     this.clock = new THREE.Clock();
     this.NOISE_FREQUENCY = 0.3;
@@ -1014,14 +1013,11 @@ const ParticleGlobe = {
     this.NOISE_SPEED = 0.03;
     this.baseColor = new THREE.Color('#508AA8'); 
     this.hotColor = new THREE.Color('#DE6B48');  
-    // ------------------------------------------
-
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
     this.camera.position.z = 9;
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    
-    this.PARTICLE_COUNT = 20000; // Updated particle count
+    this.PARTICLE_COUNT = 20000;
     this.PARTICLE_SIZE = 0.04;
     this.GLOBE_RADIUS = 5;
     this.MOUSE_INFLUENCE_RADIUS = 2;
@@ -1041,11 +1037,21 @@ const ParticleGlobe = {
     this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.05;
+    
+    // --- UPDATED LOGIC ---
+    // 1. Auto-rotation is now ON for all devices.
     this.controls.autoRotate = true;
-    this.controls.autoRotateSpeed = 3; 
+    this.controls.autoRotateSpeed = 3;
+
+    // 2. Disable manual rotation ONLY on touch devices.
+    if (this.isTouchDevice) {
+        this.controls.enableRotate = false;
+    }
+
     this.controls.enablePan = false;
     this.controls.enableZoom = false;
-    this.controls.enableRotate = true;
+    
+    // --- END UPDATED LOGIC ---
 
     this.intersectionSphere = new THREE.Mesh(
         new THREE.SphereGeometry(this.GLOBE_RADIUS, 32, 32),
@@ -1053,9 +1059,8 @@ const ParticleGlobe = {
     );
     this.scene.add(this.intersectionSphere);
 
-    // --- NEW: Particle creation now includes colors ---
     const positions = new Float32Array(this.PARTICLE_COUNT * 3);
-    const colors = new Float32Array(this.PARTICLE_COUNT * 3); // Array for colors
+    const colors = new Float32Array(this.PARTICLE_COUNT * 3);
     for (let i = 0; i < this.PARTICLE_COUNT; i++) {
         const u = Math.random(), v = Math.random();
         const theta = 2 * Math.PI * u, phi = Math.acos(2 * v - 1);
@@ -1065,31 +1070,27 @@ const ParticleGlobe = {
         positions[i * 3] = x;
         positions[i * 3 + 1] = y;
         positions[i * 3 + 2] = z;
-        this.baseColor.toArray(colors, i * 3); // Set initial color
+        this.baseColor.toArray(colors, i * 3);
     }
-    // ------------------------------------------------
-
+    
     this.originalPositions = new Float32Array(positions);
     this.animatedPositions = new Float32Array(positions);
     const particleGeometry = new THREE.BufferGeometry();
     particleGeometry.setAttribute('position', new THREE.BufferAttribute(this.animatedPositions, 3));
-    particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3)); // Set color attribute
+    particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
     
-    // --- NEW: Updated material and texture ---
     const texture = this.createParticleTexture();
     const particleMaterial = new THREE.PointsMaterial({
         size: this.PARTICLE_SIZE, map: texture,
         transparent: true, blending: THREE.AdditiveBlending,
         depthWrite: false, sizeAttenuation: true,
-        vertexColors: true // Enable vertex colors
+        vertexColors: true
     });
-    // -----------------------------------------
 
     this.particles = new THREE.Points(particleGeometry, particleMaterial);
     this.scene.add(this.particles);
   },
 
-  // --- NEW: Updated particle texture for a fiery look ---
   createParticleTexture() {
       const canvas = document.createElement('canvas');
       canvas.width = 128; canvas.height = 128;
@@ -1103,21 +1104,30 @@ const ParticleGlobe = {
       context.fillRect(0, 0, 128, 128);
       return new THREE.CanvasTexture(canvas);
   },
-  // ----------------------------------------------------
-
+  
   setupEventListeners() {
     this.onWindowResize = this.onWindowResize.bind(this);
-    this.onMouseMove = this.onMouseMove.bind(this);
-    this.onMouseLeave = this.onMouseLeave.bind(this);
-    this.onTouchMove = this.onTouchMove.bind(this); // Bind touch move handler
-    this.onMouseClick = this.onMouseClick.bind(this);
     window.addEventListener('resize', this.onWindowResize, false);
-    this.container.addEventListener('mousemove', this.onMouseMove, false);
-    this.container.addEventListener('mouseleave', this.onMouseLeave, false);
-    this.container.addEventListener('click', this.onMouseClick, false);
+
+    if (this.isTouchDevice) {
+        this.onTouchStart = this.onTouchStart.bind(this);
+        this.container.addEventListener('touchstart', this.onTouchStart, { passive: false });
+    } else {
+        this.onMouseMove = this.onMouseMove.bind(this);
+        this.onMouseClick = this.onMouseClick.bind(this);
+        this.container.addEventListener('mousemove', this.onMouseMove, false);
+        this.container.addEventListener('click', this.onMouseClick, false);
+    }
   },
 
-  // Handle window resize
+  onTouchStart(event) {
+    event.preventDefault();
+    if (event.touches.length > 0) {
+        const touch = event.touches[0];
+        this.triggerDisperse(touch.clientX, touch.clientY);
+    }
+  },
+  
   onWindowResize() {
     if (!this.container) return;
     const width = this.container.clientWidth;
@@ -1128,22 +1138,21 @@ const ParticleGlobe = {
     this.renderer.setSize(width, height);
   },
 
-  // Handle touch move for mobile devices
-  onTouchMove(event) {
-    if (event.touches.length > 0) {
-      const touch = event.touches[0];
-      this.onMouseMove(touch); // Use the same logic as mouse move
-    }
-  },
-
-  // Handle mouse move for desktop
   onMouseMove(event) {
     const rect = this.container.getBoundingClientRect();
     this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
     this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
   },
 
-  onMouseClick() {
+  onMouseClick(event) {
+    this.triggerDisperse(event.clientX, event.clientY);
+  },
+  
+  triggerDisperse(x, y) {
+    const rect = this.container.getBoundingClientRect();
+    this.mouse.x = ((x - rect.left) / rect.width) * 2 - 1;
+    this.mouse.y = -((y - rect.top) / rect.height) * 2 + 1;
+    
     this.raycaster.setFromCamera(this.mouse, this.camera);
     const intersects = this.raycaster.intersectObject(this.intersectionSphere);
     if (intersects.length > 0) {
@@ -1151,67 +1160,42 @@ const ParticleGlobe = {
       this.clickStrength = 15;
     }
   },
-
-  onMouseLeave() {
-    this.mouse.x = -100; this.mouse.y = -100;
-  },
-
+  
   animate() {
+    // This function remains the same
     requestAnimationFrame(this.animate.bind(this));
-
     if (!this.isRendered && this.container.clientWidth > 0) {
       this.onWindowResize();
       this.isRendered = true;
     }
-    
-    // --- NEW: Core animation logic updated for solar flare effect ---
     const elapsedTime = this.clock.getElapsedTime();
     this.raycaster.setFromCamera(this.mouse, this.camera);
     const intersects = this.raycaster.intersectObject(this.intersectionSphere);
     const mouse3D = (intersects.length > 0) ? intersects[0].point : new THREE.Vector3();
-    
     const positionAttribute = this.particles.geometry.attributes.position;
-    const colorAttribute = this.particles.geometry.attributes.color; // Get color attribute
-
-    if (this.clickStrength > 0) {
-      this.clickStrength *= 0.95;
-    }
-    if (this.clickStrength < 0.01) {
-      this.clickStrength = 0;
-    }
-
+    const colorAttribute = this.particles.geometry.attributes.color;
+    if (this.clickStrength > 0) { this.clickStrength *= 0.95; }
+    if (this.clickStrength < 0.01) { this.clickStrength = 0; }
     for (let i = 0; i < this.PARTICLE_COUNT; i++) {
         const i3 = i * 3;
         const originalPos = new THREE.Vector3(this.originalPositions[i3], this.originalPositions[i3 + 1], this.originalPositions[i3 + 2]);
         const animatedPos = new THREE.Vector3(positionAttribute.getX(i), positionAttribute.getY(i), positionAttribute.getZ(i));
-
-        // 1. Calculate base flame shimmer from noise
         const normal = originalPos.clone().normalize();
-        const noiseValue = this.noise.noise3D(
-            originalPos.x * this.NOISE_FREQUENCY,
-            originalPos.y * this.NOISE_FREQUENCY,
-            originalPos.z * this.NOISE_FREQUENCY + (elapsedTime * this.NOISE_SPEED)
-        );
+        const noiseValue = this.noise.noise3D(originalPos.x * this.NOISE_FREQUENCY, originalPos.y * this.NOISE_FREQUENCY, originalPos.z * this.NOISE_FREQUENCY + (elapsedTime * this.NOISE_SPEED));
         const shimmerOffset = normal.multiplyScalar(noiseValue * this.NOISE_AMPLITUDE);
         const shimmeringPos = originalPos.clone().add(shimmerOffset);
-        
-        // 2. Set particle color based on noise
         const normalizedNoise = (noiseValue + 1) * 0.5;
         const currentColor = new THREE.Color();
         currentColor.copy(this.baseColor).lerp(this.hotColor, normalizedNoise);
         colorAttribute.setXYZ(i, currentColor.r, currentColor.g, currentColor.b);
-        
-        // 3. Add hover and click forces on top of the shimmer
         const worldShimmeringPos = shimmeringPos.clone().applyMatrix4(this.particles.matrixWorld);
         let totalDisplacement = new THREE.Vector3();
-        
         const hoverDistance = worldShimmeringPos.distanceTo(mouse3D);
-        if (hoverDistance < this.MOUSE_INFLUENCE_RADIUS) {
+        if (hoverDistance < this.MOUSE_INFLUENCE_RADIUS && !this.isTouchDevice) {
             const hoverDirection = worldShimmeringPos.clone().sub(mouse3D).normalize();
             const hoverRepelStrength = ((this.MOUSE_INFLUENCE_RADIUS - hoverDistance) / this.MOUSE_INFLUENCE_RADIUS) * this.MOUSE_REPEL_STRENGTH;
             totalDisplacement.add(hoverDirection.multiplyScalar(hoverRepelStrength));
         }
-
         if (this.clickStrength > 0) {
             const clickDistance = worldShimmeringPos.distanceTo(this.clickPoint);
             const CLICK_INFLUENCE_RADIUS = 3;
@@ -1221,18 +1205,13 @@ const ParticleGlobe = {
                 totalDisplacement.add(clickDirection.multiplyScalar(clickPushStrength));
             }
         }
-        
-        // 4. Calculate final position and smoothly animate towards it
         const worldTargetPos = worldShimmeringPos.clone().add(totalDisplacement);
         const targetPos = worldTargetPos.clone().applyMatrix4(this.particles.matrixWorld.clone().invert());
-        
         animatedPos.lerp(targetPos, 0.08);
         positionAttribute.setXYZ(i, animatedPos.x, animatedPos.y, animatedPos.z);
     }
     positionAttribute.needsUpdate = true;
-    colorAttribute.needsUpdate = true; // IMPORTANT: Tell three.js colors have changed
-    // -----------------------------------------------------------------
-    
+    colorAttribute.needsUpdate = true;
     this.controls.update();
     this.renderer.render(this.scene, this.camera);
   }
