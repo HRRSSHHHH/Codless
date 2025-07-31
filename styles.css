@@ -2412,3 +2412,21 @@ body.native-scroll-ready {
     transform: translate(-50%, -50%);
   }
 }
+/* ============================================================================ */
+/* Responsive Caption for Tools Section
+/* ============================================================================ */
+
+@media (max-width: 768px) {
+  .tools-hover-caption {
+    /* Hides the original "Hover over..." text */
+    font-size: 0;
+  }
+
+  .tools-hover-caption::before {
+    /* Adds the new "Tap on..." text for mobile */
+    content: 'Tap on icons to reveal';
+    /* Use the mobile caption size variable */
+    font-size: var(--caption-size);
+    letter-spacing: 0.04em;
+  }
+}
