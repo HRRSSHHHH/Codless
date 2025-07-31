@@ -145,11 +145,12 @@
             </section>
             <!-- Lets See How We Do It Section -->
 <section id="lets-see-how-we-do-it" class="lets-see-how-we-do-it-section" aria-label="Let's See How We Do It">
+  <div id="particle-globe-container"></div>
   <h2 class="lets-see-how-we-do-it-title animated-header section-header" tabindex="0" aria-label="Let's See How We Do It">
     <span class="letter from-below">L</span><span class="letter from-above">e</span><span class="letter from-below">t</span><span class="letter from-above">'</span><span class="letter from-below">s</span><span class="letter space from-above"> </span><span class="letter from-below">S</span><span class="letter from-above">e</span><span class="letter from-below">e</span><span class="letter space from-above"> </span><span class="letter from-below">H</span><span class="letter from-above">o</span><span class="letter from-below">w</span><span class="letter space from-above"> </span><span class="letter from-below">W</span><span class="letter from-above">e</span><span class="letter space from-below"> </span><span class="letter from-above">D</span><span class="letter from-below">o</span><span class="letter space from-above"> </span><span class="letter from-below">I</span><span class="letter from-above">t</span><span class="letter from-below">!</span>
   </h2>
 </section>
-  <!-- Card stacker wrapper for step sections -->
+  <div class="card-stack-container">
 <!-- Step 1 Section -->
 <section class="step-section step-section-1" id="step-1" aria-label="Step 1" style="position:relative;overflow:hidden;">
   <video class="step1-bg-video" src="videos/Step-1-BG.mp4" autoplay loop muted playsinline aria-hidden="true" tabindex="-1" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;"></video>
@@ -369,6 +370,7 @@
     </div>
   </div>
 </section>
+</div>
 <!-- Horizontal Scroll Container for Steps 7-12 -->
 <div class="horizontal-container" style="position: relative; width: 100vw; height: 100vh; overflow: hidden;">
   <div class="horizontal-wrapper" style="position: absolute; height: 100%; display: flex; flex-direction: row; will-change: transform;">
@@ -733,9 +735,30 @@
             </div>
         </footer>
         </div>
+        
+        </div> <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/simplex-noise@2.4.0/simplex-noise.js"></script> <script src="script.js"></script>
+
     <script src="script.js"></script>
     <!-- GSAP and ScrollTrigger CDN for robust animation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<div id="mobile-nav-overlay">
+    <div class="ripple-background"></div>
+    <ul class="mobile-nav-list">
+        <li><a class="mobile-nav-tab" href="#about">Why</a></li>
+        <li><a class="mobile-nav-tab" href="#tools">Tools</a></li>
+        <li><a class="mobile-nav-tab" href="#how-we-do-it">How</a></li>
+        <li><a class="mobile-nav-tab" href="#faq">FAQ</a></li>
+        <li><a class="mobile-nav-tab" href="#contact">Contact</a></li>
+    </ul>
+    <button id="close-nav-btn" aria-label="Close menu">
+        <span class="close-line"></span>
+        <span class="close-line"></span>
+    </button>
+</div>
+
 </body>
 </html>
