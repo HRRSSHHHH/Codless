@@ -1045,7 +1045,7 @@ const ParticleGlobe = {
 
     // 2. Disable manual rotation ONLY on touch devices.
     if (this.isTouchDevice) {
-        this.controls.enableRotate = false;
+        this.controls.enableRotate = true;
     }
 
     this.controls.enablePan = false;
