@@ -1109,6 +1109,7 @@ const ParticleGlobe = {
     this.onWindowResize = this.onWindowResize.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);
     this.onMouseLeave = this.onMouseLeave.bind(this);
+    this.onTouchMove = this.onTouchMove.bind(this); // Bind touch move handler
     this.onMouseClick = this.onMouseClick.bind(this);
     window.addEventListener('resize', this.onWindowResize, false);
     this.container.addEventListener('mousemove', this.onMouseMove, false);
@@ -1116,6 +1117,7 @@ const ParticleGlobe = {
     this.container.addEventListener('click', this.onMouseClick, false);
   },
 
+  // Handle window resize
   onWindowResize() {
     if (!this.container) return;
     const width = this.container.clientWidth;
@@ -1126,6 +1128,15 @@ const ParticleGlobe = {
     this.renderer.setSize(width, height);
   },
 
+  // Handle touch move for mobile devices
+  onTouchMove(event) {
+    if (event.touches.length > 0) {
+      const touch = event.touches[0];
+      this.onMouseMove(touch); // Use the same logic as mouse move
+    }
+  },
+
+  // Handle mouse move for desktop
   onMouseMove(event) {
     const rect = this.container.getBoundingClientRect();
     this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
