@@ -1042,14 +1042,14 @@ input:focus {
     white-space: nowrap;
   }
 
-  .tools-orbit {
-    width: 300px;
-    height: 150px;
+ .tools-orbit {
+    width: 150px;
+    height: 200px;
   }
 
   .tool-moon {
-    --x-amplitude: 200px;
-    --y-amplitude: 100px;
+    --x-amplitude: 150px;
+    --y-amplitude: 200px;
     --wobble-multiplier: 8;
     --wobble-amplitude: 7px;
   }
