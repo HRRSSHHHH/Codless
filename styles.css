@@ -783,34 +783,19 @@ input:focus {
 }
 
 @media (max-width: 768px) {
-  .hero-section {
-  /* This ensures the section is a positioning container for its children */
+ .hero-section {
+  position: relative; /* This is the anchor for absolutely positioned children */
   display: flex;
-  justify-content: center; /* Center content horizontally */
-  align-items: flex-end; /* Align content to the bottom */
-  padding: 0; /* Reset padding, we'll control it on the children */
-}
-
-.cta-container {
-  /* Position the CTA absolutely within the hero section */
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%); /* Center it horizontally */
-
-  /* Reset any previous styling to match the new layout */
-  background: none;
-  border: none;
-  backdrop-filter: none;
-  padding: 80px;
+  justify-content: center;
+  align-items: flex-end;
 }
 
 .hero-content {
   width: 100%;
   align-items: center;
   text-align: center;
-  
-  /* Apply the bottom and side margins as padding */
-  padding: 100px 40px 60px 40px; 
+  /* Increased bottom padding to make space for the CTAs below the text */
+  padding: 0 32px 80px 32px; 
   box-sizing: border-box;
 }
   
@@ -822,6 +807,80 @@ input:focus {
   text-align: left;
   position: relative;
   overflow: hidden;
+}
+.chevron-container {
+  display: block;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 20px; /* Position it 100px from the bottom */
+  z-index: 5;
+  width: 24px;
+  height: 36px;
+}
+
+.sound-bars-btn {
+  position: absolute;
+  right: 24px;
+  bottom: 40px;
+  z-index: 5;
+}
+
+/* --- Chevron Animation Styles --- */
+
+.chevron {
+  position: absolute;
+  width: 24px;
+  height: 8px;
+  opacity: 0;
+  animation: pulse-and-move 3s ease-out infinite;
+}
+
+.chevron:before,
+.chevron:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 51%;
+  background: #fff;
+}
+
+.chevron:before {
+  left: 0;
+  transform: skew(0deg, 30deg);
+}
+
+.chevron:after {
+  right: 0;
+  width: 50%;
+  transform: skew(0deg, -30deg);
+}
+
+.chevron:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.chevron:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes pulse-and-move {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(20px) scale(1);
+    box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.5);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
 }
 
 }
@@ -1504,7 +1563,7 @@ input:focus {
 
 @media (max-width: 768px) {
   .cta-container {
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -2040,6 +2099,12 @@ input[aria-invalid="true"] {
   text-align: center;
 }
 
+.title-word {
+  /* This treats each word as a single, unbreakable block */
+  display: inline-block;
+  /* Adds a space between the words */
+  margin-right: 0.25em; 
+}
 .animated-header {
   display: block;
   text-align: center;
