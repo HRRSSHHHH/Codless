@@ -1126,7 +1126,7 @@ const ParticleGlobe = {
     this.controls.autoRotate = true;
     this.controls.autoRotateSpeed = 3;
     if (this.isTouchDevice) {
-        this.controls.enableRotate = false;
+        this.controls.enableRotate = true;
     }
     this.controls.enablePan = false;
     this.controls.enableZoom = false;
