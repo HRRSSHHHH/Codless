@@ -847,79 +847,97 @@ const SectionAnimations = {
 };
 
 // ============================================================================
-// Tools Section Animation Module (Responsive with Tap-Wobble)
+// Tools Section Animation Module (Definitive Version)
 // ============================================================================
-
 const ToolsAnimation = {
   init() {
+    const toolsSection = safeQuerySelector('.tools-section');
     const toolMoons = safeQuerySelectorAll('.tool-moon');
-    const toolsOrbit = safeQuerySelector('.tools-orbit');
-    
-    if (!toolMoons.length || !toolsOrbit) {
+    if (!toolMoons.length || !toolsSection) {
       console.log('Tools section elements not found');
       return;
     }
 
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    let activeMoon = null;
+
+    // --- Reusable Animation Functions ---
+
+    // Activates the "wobble, rotate, and grow" effect
+    const activateMoon = (moon) => {
+      const icon = moon.querySelector('.tool-icon');
+      const label = moon.querySelector('.tool-label');
+      moon.style.animationPlayState = 'paused';
+      gsap.to(icon, { scale: 1.3, rotation: 360, duration: 0.4, ease: "back.out(1.7)" });
+      gsap.to(label, { opacity: 1, scale: 1, y: 0, duration: 0.4, ease: "back.out(1.7)" });
+      gsap.to(moon, { filter: "brightness(1.2) drop-shadow(0 0 10px rgba(222, 107, 72, 0.5))", duration: 0.3, ease: "power2.out" });
+    };
+
+    // Resets the moon to its default orbiting state
+    const resetMoon = (moon) => {
+      if (!moon) return;
+      const icon = moon.querySelector('.tool-icon');
+      const label = moon.querySelector('.tool-label');
+      moon.style.animationPlayState = 'running';
+      gsap.to(icon, { scale: 1, rotation: 0, duration: 0.4, ease: "power2.out" });
+      gsap.to(label, { opacity: 0, scale: 0.8, y: 10, duration: 0.4, ease: "power2.out" });
+      gsap.to(moon, { filter: "brightness(1) drop-shadow(none)", duration: 0.3, ease: "power2.out" });
+    };
+
+    // --- Intersection Observer for Performance ---
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          toolMoons.forEach(moon => {
+            if (moon !== activeMoon) moon.style.animationPlayState = 'running';
+          });
+        } else {
+          toolMoons.forEach(moon => {
+            moon.style.animationPlayState = 'paused';
+          });
+        }
+      });
+    }, { threshold: 0.01 });
+    observer.observe(toolsSection);
+
+    // --- Device-Specific Event Listeners ---
 
     if (isTouchDevice) {
-      // --- MOBILE: TAP-TO-REVEAL LOGIC (WITH WOBBLE & PAUSE) ---
-      let activeMoon = null; // Variable to track the active moon
-
-      // A reusable function to reset a moon to its default state
-      const resetMoon = (moonToReset) => {
-        if (!moonToReset) return;
-        moonToReset.style.animationPlayState = 'running';
-        gsap.to(moonToReset.querySelector('.tool-icon'), { scale: 1, duration: 0.4, ease: "power2.out" });
-        gsap.to(moonToReset.querySelector('.tool-label'), { autoAlpha: 0, scale: 0.8, y: 10, duration: 0.4, ease: "power2.out" });
-      };
-
+      // --- MOBILE: TAP LOGIC ---
       toolMoons.forEach(moon => {
-        const icon = moon.querySelector('.tool-icon');
-        const label = moon.querySelector('.tool-label');
-        gsap.set(label, { autoAlpha: 0, scale: 0.8, y: 10 });
-
+        gsap.set(moon.querySelector('.tool-label'), { opacity: 0, scale: 0.8, y: 10 });
         moon.addEventListener('click', (e) => {
           e.preventDefault();
-
-          // If a different moon is already active, reset it first
+          e.stopPropagation(); // Prevent the document click listener from firing
+          
           if (activeMoon && activeMoon !== moon) {
             resetMoon(activeMoon);
           }
-
-          // Toggle the clicked moon
+          
           if (activeMoon === moon) {
-            // If it's already active, reset it and clear the state
             resetMoon(moon);
             activeMoon = null;
           } else {
-            // Otherwise, activate it
-            moon.style.animationPlayState = 'paused';
-            gsap.to(icon, { scale: 1.3, duration: 0.4, ease: "back.out(1.7)" });
-            gsap.to(label, { autoAlpha: 1, scale: 1, y: 0, duration: 0.4, ease: "back.out(1.7)" });
-            activeMoon = moon; // Set the current moon as active
+            activateMoon(moon);
+            activeMoon = moon;
           }
         });
       });
 
+      // Listener to tap outside to close
+      document.addEventListener('click', () => {
+        if (activeMoon) {
+          resetMoon(activeMoon);
+          activeMoon = null;
+        }
+      });
+
     } else {
-      // --- DESKTOP: HOVER-TO-REVEAL LOGIC (NO CHANGES) ---
+      // --- DESKTOP: HOVER LOGIC ---
       toolMoons.forEach((moon) => {
-        const icon = moon.querySelector('.tool-icon');
-        const label = moon.querySelector('.tool-label');
-        gsap.set(label, { opacity: 0, scale: 0.8, y: 10 });
-        
-        moon.addEventListener('mouseenter', () => {
-          moon.style.animationPlayState = 'paused';
-          gsap.to(icon, { scale: 1.3, duration: 0.4, ease: "back.out(1.7)" });
-          gsap.to(label, { opacity: 1, scale: 1, y: 0, duration: 0.4, ease: "back.out(1.7)" });
-        });
-        
-        moon.addEventListener('mouseleave', () => {
-          moon.style.animationPlayState = 'running';
-          gsap.to(icon, { scale: 1, duration: 0.4, ease: "power2.out" });
-          gsap.to(label, { opacity: 0, scale: 0.8, y: 10, duration: 0.4, ease: "power2.out" });
-        });
+        gsap.set(moon.querySelector('.tool-label'), { opacity: 0, scale: 0.8, y: 10 });
+        moon.addEventListener('mouseenter', () => activateMoon(moon));
+        moon.addEventListener('mouseleave', () => resetMoon(moon));
       });
     }
   }
@@ -986,14 +1004,19 @@ const ScrollCTA = {
 };
 
 // ============================================================================
-// Particle Globe Module (with Mobile Tap Interaction & Auto-Rotate)
+// Particle Globe Module (Corrected Performance Optimization)
 // ============================================================================
 
 const ParticleGlobe = {
   init() {
     this.container = safeQuerySelector('#particle-globe-container');
     if (!this.container) return;
-
+    
+    // --- THIS IS THE FIX ---
+    // Assume the globe is visible on page load.
+    this.isInView = true; 
+    
+    // (All other properties remain the same)
     this.isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     this.isRendered = false; 
     this.clickPoint = new THREE.Vector3();
@@ -1020,142 +1043,27 @@ const ParticleGlobe = {
     this.setupGlobe();
     this.setupEventListeners();
     this.animate();
+    this.setupIntersectionObserver();
   },
 
-  setupGlobe() {
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    this.container.appendChild(this.renderer.domElement);
+  setupIntersectionObserver() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            this.isInView = entry.isIntersecting;
+        });
+    }, { threshold: 0.01 });
 
-    this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
-    this.controls.enableDamping = true;
-    this.controls.dampingFactor = 0.05;
-    
-    // --- UPDATED LOGIC ---
-    // 1. Auto-rotation is now ON for all devices.
-    this.controls.autoRotate = true;
-    this.controls.autoRotateSpeed = 3;
-
-    // 2. Disable manual rotation ONLY on touch devices.
-    if (this.isTouchDevice) {
-        this.controls.enableRotate = true;
-    }
-
-    this.controls.enablePan = false;
-    this.controls.enableZoom = false;
-    
-    // --- END UPDATED LOGIC ---
-
-    this.intersectionSphere = new THREE.Mesh(
-        new THREE.SphereGeometry(this.GLOBE_RADIUS, 32, 32),
-        new THREE.MeshBasicMaterial({ visible: false, side: THREE.DoubleSide })
-    );
-    this.scene.add(this.intersectionSphere);
-
-    const positions = new Float32Array(this.PARTICLE_COUNT * 3);
-    const colors = new Float32Array(this.PARTICLE_COUNT * 3);
-    for (let i = 0; i < this.PARTICLE_COUNT; i++) {
-        const u = Math.random(), v = Math.random();
-        const theta = 2 * Math.PI * u, phi = Math.acos(2 * v - 1);
-        const x = this.GLOBE_RADIUS * Math.sin(phi) * Math.cos(theta);
-        const y = this.GLOBE_RADIUS * Math.sin(phi) * Math.sin(theta);
-        const z = this.GLOBE_RADIUS * Math.cos(phi);
-        positions[i * 3] = x;
-        positions[i * 3 + 1] = y;
-        positions[i * 3 + 2] = z;
-        this.baseColor.toArray(colors, i * 3);
-    }
-    
-    this.originalPositions = new Float32Array(positions);
-    this.animatedPositions = new Float32Array(positions);
-    const particleGeometry = new THREE.BufferGeometry();
-    particleGeometry.setAttribute('position', new THREE.BufferAttribute(this.animatedPositions, 3));
-    particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-    
-    const texture = this.createParticleTexture();
-    const particleMaterial = new THREE.PointsMaterial({
-        size: this.PARTICLE_SIZE, map: texture,
-        transparent: true, blending: THREE.AdditiveBlending,
-        depthWrite: false, sizeAttenuation: true,
-        vertexColors: true
-    });
-
-    this.particles = new THREE.Points(particleGeometry, particleMaterial);
-    this.scene.add(this.particles);
-  },
-
-  createParticleTexture() {
-      const canvas = document.createElement('canvas');
-      canvas.width = 128; canvas.height = 128;
-      const context = canvas.getContext('2d');
-      const gradient = context.createRadialGradient(64, 64, 0, 64, 64, 64);
-      gradient.addColorStop(0, 'rgba(255,255,255,1)');
-      gradient.addColorStop(0.2, 'rgba(255,255,255,1)');
-      gradient.addColorStop(0.5, '#DE6B48');
-      gradient.addColorStop(1, 'rgba(255,100,0,0)');
-      context.fillStyle = gradient;
-      context.fillRect(0, 0, 128, 128);
-      return new THREE.CanvasTexture(canvas);
-  },
-  
-  setupEventListeners() {
-    this.onWindowResize = this.onWindowResize.bind(this);
-    window.addEventListener('resize', this.onWindowResize, false);
-
-    if (this.isTouchDevice) {
-        this.onTouchStart = this.onTouchStart.bind(this);
-        this.container.addEventListener('touchstart', this.onTouchStart, { passive: false });
-    } else {
-        this.onMouseMove = this.onMouseMove.bind(this);
-        this.onMouseClick = this.onMouseClick.bind(this);
-        this.container.addEventListener('mousemove', this.onMouseMove, false);
-        this.container.addEventListener('click', this.onMouseClick, false);
-    }
-  },
-
-  onTouchStart(event) {
-    event.preventDefault();
-    if (event.touches.length > 0) {
-        const touch = event.touches[0];
-        this.triggerDisperse(touch.clientX, touch.clientY);
-    }
-  },
-  
-  onWindowResize() {
-    if (!this.container) return;
-    const width = this.container.clientWidth;
-    const height = this.container.clientHeight;
-    if (width === 0 || height === 0) return;
-    this.camera.aspect = width / height;
-    this.camera.updateProjectionMatrix();
-    this.renderer.setSize(width, height);
-  },
-
-  onMouseMove(event) {
-    const rect = this.container.getBoundingClientRect();
-    this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-    this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-  },
-
-  onMouseClick(event) {
-    this.triggerDisperse(event.clientX, event.clientY);
-  },
-  
-  triggerDisperse(x, y) {
-    const rect = this.container.getBoundingClientRect();
-    this.mouse.x = ((x - rect.left) / rect.width) * 2 - 1;
-    this.mouse.y = -((y - rect.top) / rect.height) * 2 + 1;
-    
-    this.raycaster.setFromCamera(this.mouse, this.camera);
-    const intersects = this.raycaster.intersectObject(this.intersectionSphere);
-    if (intersects.length > 0) {
-      this.clickPoint.copy(intersects[0].point);
-      this.clickStrength = 15;
-    }
+    observer.observe(this.container);
   },
   
   animate() {
-    // This function remains the same
     requestAnimationFrame(this.animate.bind(this));
+
+    if (!this.isInView) {
+        return;
+    }
+
+    // (The rest of the animate() function remains the same)
     if (!this.isRendered && this.container.clientWidth > 0) {
       this.onWindowResize();
       this.isRendered = true;
@@ -1206,7 +1114,117 @@ const ParticleGlobe = {
     colorAttribute.needsUpdate = true;
     this.controls.update();
     this.renderer.render(this.scene, this.camera);
-  }
+  },
+
+  // (The rest of the functions in this module remain the same)
+  setupGlobe() {
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.container.appendChild(this.renderer.domElement);
+    this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+    this.controls.enableDamping = true;
+    this.controls.dampingFactor = 0.05;
+    this.controls.autoRotate = true;
+    this.controls.autoRotateSpeed = 3;
+    if (this.isTouchDevice) {
+        this.controls.enableRotate = false;
+    }
+    this.controls.enablePan = false;
+    this.controls.enableZoom = false;
+    this.intersectionSphere = new THREE.Mesh(
+        new THREE.SphereGeometry(this.GLOBE_RADIUS, 32, 32),
+        new THREE.MeshBasicMaterial({ visible: false, side: THREE.DoubleSide })
+    );
+    this.scene.add(this.intersectionSphere);
+    const positions = new Float32Array(this.PARTICLE_COUNT * 3);
+    const colors = new Float32Array(this.PARTICLE_COUNT * 3);
+    for (let i = 0; i < this.PARTICLE_COUNT; i++) {
+        const u = Math.random(), v = Math.random();
+        const theta = 2 * Math.PI * u, phi = Math.acos(2 * v - 1);
+        const x = this.GLOBE_RADIUS * Math.sin(phi) * Math.cos(theta);
+        const y = this.GLOBE_RADIUS * Math.sin(phi) * Math.sin(theta);
+        const z = this.GLOBE_RADIUS * Math.cos(phi);
+        positions[i * 3] = x;
+        positions[i * 3 + 1] = y;
+        positions[i * 3 + 2] = z;
+        this.baseColor.toArray(colors, i * 3);
+    }
+    this.originalPositions = new Float32Array(positions);
+    this.animatedPositions = new Float32Array(positions);
+    const particleGeometry = new THREE.BufferGeometry();
+    particleGeometry.setAttribute('position', new THREE.BufferAttribute(this.animatedPositions, 3));
+    particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    const texture = this.createParticleTexture();
+    const particleMaterial = new THREE.PointsMaterial({
+        size: this.PARTICLE_SIZE, map: texture,
+        transparent: true, blending: THREE.AdditiveBlending,
+        depthWrite: false, sizeAttenuation: true,
+        vertexColors: true
+    });
+    this.particles = new THREE.Points(particleGeometry, particleMaterial);
+    this.scene.add(this.particles);
+  },
+  createParticleTexture() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 128; canvas.height = 128;
+      const context = canvas.getContext('2d');
+      const gradient = context.createRadialGradient(64, 64, 0, 64, 64, 64);
+      gradient.addColorStop(0, 'rgba(255,255,255,1)');
+      gradient.addColorStop(0.2, 'rgba(255,255,255,1)');
+      gradient.addColorStop(0.5, '#DE6B48');
+      gradient.addColorStop(1, 'rgba(255,100,0,0)');
+      context.fillStyle = gradient;
+      context.fillRect(0, 0, 128, 128);
+      return new THREE.CanvasTexture(canvas);
+  },
+  setupEventListeners() {
+    this.onWindowResize = this.onWindowResize.bind(this);
+    window.addEventListener('resize', this.onWindowResize, false);
+    if (this.isTouchDevice) {
+        this.onTouchStart = this.onTouchStart.bind(this);
+        this.container.addEventListener('touchstart', this.onTouchStart, { passive: false });
+    } else {
+        this.onMouseMove = this.onMouseMove.bind(this);
+        this.onMouseClick = this.onMouseClick.bind(this);
+        this.container.addEventListener('mousemove', this.onMouseMove, false);
+        this.container.addEventListener('click', this.onMouseClick, false);
+    }
+  },
+  onTouchStart(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.touches.length > 0) {
+        const touch = event.touches[0];
+        this.triggerDisperse(touch.clientX, touch.clientY);
+    }
+  },
+  onWindowResize() {
+    if (!this.container) return;
+    const width = this.container.clientWidth;
+    const height = this.container.clientHeight;
+    if (width === 0 || height === 0) return;
+    this.camera.aspect = width / height;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(width, height);
+  },
+  onMouseMove(event) {
+    const rect = this.container.getBoundingClientRect();
+    this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+  },
+  onMouseClick(event) {
+    this.triggerDisperse(event.clientX, event.clientY);
+  },
+  triggerDisperse(x, y) {
+    const rect = this.container.getBoundingClientRect();
+    this.mouse.x = ((x - rect.left) / rect.width) * 2 - 1;
+    this.mouse.y = -((y - rect.top) / rect.height) * 2 + 1;
+    this.raycaster.setFromCamera(this.mouse, this.camera);
+    const intersects = this.raycaster.intersectObject(this.intersectionSphere);
+    if (intersects.length > 0) {
+      this.clickPoint.copy(intersects[0].point);
+      this.clickStrength = 15;
+    }
+  },
 };
 
 // ============================================================================
