@@ -424,7 +424,7 @@ input:focus {
   top: 8px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 5000;
+  z-index: 10000;
   padding: 8px 16px;
   display: flex;
   align-items: center;
