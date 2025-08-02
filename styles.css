@@ -1186,7 +1186,76 @@ input:focus {
   opacity: 1;
   transform: none;
 }
+.horizontal-scroll-cue {
+  display: none; 
+}
 
+@media (max-width: 768px) {
+ /* --- HORIZONTAL CONTAINER ON MOBILE --- */
+.horizontal-container {
+    /* NEW: Hides the default browser scrollbar */
+    scrollbar-width: none; /* For Firefox */
+}
+
+/* For Chrome, Safari, and other WebKit browsers */
+.horizontal-container::-webkit-scrollbar {
+    display: none;
+}
+
+/* --- UPDATED: SWIPE MESSAGE --- */
+.horizontal-scroll-cue {
+  display: flex;
+  position: absolute;
+  bottom: 60px; /* UPDATED: Moved up to make space for dots */
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--color-neutral-light);
+  font-family: urbanist, sans-serif;
+  font-size: var(--caption-size);
+  font-weight: var(--caption-weight);
+  z-index: 10;
+  opacity: 1; /* UPDATED: Make it visible by default */
+  transition: opacity 0.4s ease; /* UPDATED: Add transition for smooth hiding */
+  /* REMOVED: The 'animation' property has been deleted from here. */
+}
+
+/* NEW: Class to hide the cue after scrolling has started */
+.horizontal-scroll-cue.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.horizontal-scroll-cue .icon {
+  margin-right: 10px;
+  font-size: var(--caption-size);
+}
+
+/* REMOVED: You can delete the entire @keyframes fade-in-out block as it's no longer used. */
+
+/* --- NEW: DOT INDICATOR STYLES --- */
+.scroll-dots {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 10;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.dot.active {
+    background-color: var(--color-primary);
+    transform: scale(1.3);
+}
+}
 /* Vertical sections base styling */
 .vertical-sections .step-section {
   position: relative;
