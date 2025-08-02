@@ -1126,7 +1126,7 @@ const ParticleGlobe = {
     this.controls.autoRotate = true;
     this.controls.autoRotateSpeed = 3;
     if (this.isTouchDevice) {
-        this.controls.enableRotate = true;
+        this.controls.enableRotate = false;
     }
     this.controls.enablePan = false;
     this.controls.enableZoom = false;
@@ -1238,48 +1238,90 @@ const HorizontalScroll = {
     const container = document.querySelector(".horizontal-container");
     const wrapper = document.querySelector(".horizontal-wrapper");
     const horizontalSections = gsap.utils.toArray(".horizontal-card");
+    const scrollCue = document.querySelector(".horizontal-scroll-cue"); // Get the cue element
 
     if (!container || !wrapper || !horizontalSections.length) {
       console.warn("Horizontal scroll elements not found. Skipping initialization.");
       return;
     }
 
-    // This main tween handles the horizontal scrolling of the entire section
-    const horizontalTween = gsap.to(wrapper, {
-      x: () => `-${wrapper.scrollWidth - window.innerWidth}px`,
-      ease: "none",
-      scrollTrigger: {
-        trigger: container,
-        pin: true,
-        scrub: 1,
-        end: () => `+=${wrapper.scrollWidth - window.innerWidth}`,
-        invalidateOnRefresh: true,
-        pinType: "transform",
-      },
-    });
+    // Check for mobile devices
+    if (window.matchMedia("(max-width: 768px)").matches) {
+      // --- MOBILE LOGIC ---
+      container.style.overflowX = "scroll";
+      wrapper.style.position = "static";
+      wrapper.style.display = "flex";
+      wrapper.style.width = `${horizontalSections.length * 100}vw`; // Set width explicitly
 
-    // Animate each horizontal card as it scrolls into view
-    horizontalSections.forEach(section => {
-      // We apply a 3D "fly-in" from the right
-      gsap.from(section, {
-        x: 200,                 // Start 200px to the right
-        rotateY: -30,           // Rotate on the Y-axis (from the right)
-        translateZ: -300,       // Start "further away" in 3D space
-        autoAlpha: 0,           // Fade in
-        ease: 'power2.out',
+      // NEW: Dot indicator logic
+      const dotsContainer = document.querySelector(".scroll-dots");
+      if (dotsContainer) {
+        // Create a dot for each section
+        for (let i = 0; i < horizontalSections.length; i++) {
+          const dot = document.createElement("div");
+          dot.classList.add("dot");
+          dotsContainer.appendChild(dot);
+        }
+
+        const dots = dotsContainer.querySelectorAll(".dot");
+        dots[0]?.classList.add("active"); // Activate the first dot initially
+
+        let currentActiveDot = 0;
+
+        // Add a scroll event listener to the container
+        container.addEventListener('scroll', () => {
+          // Hide the "Swipe to continue" message on the first scroll
+          if (scrollCue && !scrollCue.classList.contains('hidden')) {
+            scrollCue.classList.add('hidden');
+          }
+
+          // Calculate which dot should be active
+          const scrollLeft = container.scrollLeft;
+          const sectionWidth = window.innerWidth;
+          const activeIndex = Math.round(scrollLeft / sectionWidth);
+
+          // Update dots only if the active one has changed
+          if (activeIndex !== currentActiveDot) {
+            dots[currentActiveDot]?.classList.remove("active");
+            dots[activeIndex]?.classList.add("active");
+            currentActiveDot = activeIndex;
+          }
+        });
+      }
+
+    } else {
+      // --- DESKTOP LOGIC (Unchanged) ---
+      const horizontalTween = gsap.to(wrapper, {
+        x: () => `-${wrapper.scrollWidth - window.innerWidth}px`,
+        ease: "none",
         scrollTrigger: {
-          trigger: section,
-          // This is the key: it links the card's animation to the main horizontal scroll
-          containerAnimation: horizontalTween,
-          // Defines the window in which the animation occurs
-          start: 'left 90%', // Starts when the card's left edge is 90% across the screen
-          end: 'left 60%',   // Finishes when it reaches 60%
-          scrub: 1.5,
+          trigger: container,
+          pin: true,
+          scrub: 1,
+          end: () => `+=${wrapper.scrollWidth - window.innerWidth}`,
+          invalidateOnRefresh: true,
+          pinType: "transform",
         },
       });
-    });
 
-    console.log("✅ Horizontal scroll with 3D fly-in animation initialized successfully.");
+      horizontalSections.forEach(section => {
+        gsap.from(section, {
+          x: 200,
+          rotateY: -30,
+          translateZ: -300,
+          autoAlpha: 0,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: section,
+            containerAnimation: horizontalTween,
+            start: 'left 90%',
+            end: 'left 60%',
+            scrub: 1.5,
+          },
+        });
+      });
+    }
+    console.log("✅ Horizontal scroll initialized successfully.");
   }
 };
 
@@ -2310,4 +2352,4 @@ document.addEventListener('DOMContentLoaded', () => {
       document.body.classList.add('native-scroll-ready');
     }
   }, 2000);
-});
+}); 
