@@ -1231,6 +1231,8 @@ const ParticleGlobe = {
 // Horizontal Scroll Module (UPGRADED with 3D Fly-in)
 // ============================================================================
 
+// script.js
+
 const HorizontalScroll = {
   init() {
     gsap.registerPlugin(ScrollTrigger);
@@ -1238,25 +1240,24 @@ const HorizontalScroll = {
     const container = document.querySelector(".horizontal-container");
     const wrapper = document.querySelector(".horizontal-wrapper");
     const horizontalSections = gsap.utils.toArray(".horizontal-card");
-    const scrollCue = document.querySelector(".horizontal-scroll-cue"); // Get the cue element
+    const scrollCue = document.querySelector(".horizontal-scroll-cue");
 
     if (!container || !wrapper || !horizontalSections.length) {
       console.warn("Horizontal scroll elements not found. Skipping initialization.");
       return;
     }
 
-    // Check for mobile devices
+    // --- MOBILE LOGIC (UPDATED) ---
     if (window.matchMedia("(max-width: 768px)").matches) {
-      // --- MOBILE LOGIC ---
       container.style.overflowX = "scroll";
       wrapper.style.position = "static";
       wrapper.style.display = "flex";
-      wrapper.style.width = `${horizontalSections.length * 100}vw`; // Set width explicitly
+      wrapper.style.width = `${horizontalSections.length * 100}vw`;
 
-      // NEW: Dot indicator logic
       const dotsContainer = document.querySelector(".scroll-dots");
       if (dotsContainer) {
-        // Create a dot for each section
+        dotsContainer.innerHTML = '';
+        
         for (let i = 0; i < horizontalSections.length; i++) {
           const dot = document.createElement("div");
           dot.classList.add("dot");
@@ -1264,46 +1265,53 @@ const HorizontalScroll = {
         }
 
         const dots = dotsContainer.querySelectorAll(".dot");
-        dots[0]?.classList.add("active"); // Activate the first dot initially
+        dots[0]?.classList.add("active");
 
         let currentActiveDot = 0;
 
-        // Add a scroll event listener to the container
+        // This listener for interactivity is correct and remains unchanged
         container.addEventListener('scroll', () => {
-          // Hide the "Swipe to continue" message on the first scroll
           if (scrollCue && !scrollCue.classList.contains('hidden')) {
             scrollCue.classList.add('hidden');
           }
-
-          // Calculate which dot should be active
           const scrollLeft = container.scrollLeft;
           const sectionWidth = window.innerWidth;
           const activeIndex = Math.round(scrollLeft / sectionWidth);
-
-          // Update dots only if the active one has changed
           if (activeIndex !== currentActiveDot) {
             dots[currentActiveDot]?.classList.remove("active");
             dots[activeIndex]?.classList.add("active");
             currentActiveDot = activeIndex;
           }
         });
+        
+        // NEW: Use ScrollTrigger to control the visibility of the dots container
+        ScrollTrigger.create({
+          trigger: container, // The horizontal section itself
+          start: "top center", // When the top of the section hits the center of the screen
+          end: "bottom center", // When the bottom of the section hits the center
+          onEnter: () => dotsContainer.classList.add("visible"),
+          onLeave: () => dotsContainer.classList.remove("visible"),
+          onEnterBack: () => dotsContainer.classList.add("visible"),
+          onLeaveBack: () => dotsContainer.classList.remove("visible"),
+        });
       }
-
-    } else {
-      // --- DESKTOP LOGIC (Unchanged) ---
+    } 
+    // --- DESKTOP LOGIC (No changes here) ---
+    else {
+      // ... your existing desktop code with pinType: "fixed" ...
       const horizontalTween = gsap.to(wrapper, {
         x: () => `-${wrapper.scrollWidth - window.innerWidth}px`,
         ease: "none",
         scrollTrigger: {
           trigger: container,
+          start: "top top",
           pin: true,
-          scrub: 1,
+          scrub: 1, 
+          pinType: "fixed", 
           end: () => `+=${wrapper.scrollWidth - window.innerWidth}`,
           invalidateOnRefresh: true,
-          pinType: "transform",
         },
       });
-
       horizontalSections.forEach(section => {
         gsap.from(section, {
           x: 200,
