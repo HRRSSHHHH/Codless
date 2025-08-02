@@ -2290,6 +2290,12 @@ body {
 }
 
 .step-section {
+    background-image: url('images/step section bg.jpg');
+  
+  /* Helper properties to ensure the image covers the section */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   position: relative;
   width: 100vw;
   min-height: 100vh;
@@ -2418,7 +2424,7 @@ body {
   text-align: center;
 }
 /* Vertical scroll sections */
-.step-section-1,
+.step-section-1, 
 .step-section-2,
 .step-section-3,
 .step-section-4,
