@@ -1231,37 +1231,6 @@ input:focus {
 }
 
 /* REMOVED: You can delete the entire @keyframes fade-in-out block as it's no longer used. */
-
-/* --- NEW: DOT INDICATOR STYLES --- */
-.dots-container {
-    position: fixed;
-    bottom: 40px;
-    left: 0;
-    width: 100%;
-    z-index: 100;
-    pointer-events: none;
-}
-
-/* The inner container for the dots remains the same */
-.scroll-dots {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    pointer-events: auto;
-}
-
-.dot {
-    width: 8px;
-    height: 8px;
-    background-color: rgba(255, 255, 255, 0.4);
-    border-radius: 50%;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.dot.active {
-    background-color: var(--color-primary);
-    transform: scale(1.3);
-}
 }
 
 /* ============================================================================ */
