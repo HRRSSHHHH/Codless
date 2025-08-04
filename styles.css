@@ -1233,14 +1233,21 @@ input:focus {
 /* REMOVED: You can delete the entire @keyframes fade-in-out block as it's no longer used. */
 
 /* --- NEW: DOT INDICATOR STYLES --- */
-.scroll-dots {
-    position: sticky;
+.dots-container {
+    position: fixed;
     bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 12px;
+    left: 0;
+    width: 100%;
     z-index: 10;
+    pointer-events: none;
+}
+
+/* The inner container for the dots remains the same */
+.scroll-dots {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    pointer-events: auto;
 }
 
 .dot {
