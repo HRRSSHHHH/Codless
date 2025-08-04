@@ -1158,7 +1158,7 @@ input:focus {
 /* ============================================================================ */
 
 .horizontal-container {
-  position: static;
+  position: relative;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
@@ -1234,7 +1234,7 @@ input:focus {
 
 /* --- NEW: DOT INDICATOR STYLES --- */
 .dots-container {
-    position: fixed;
+    position: absolute;
     bottom: 40px;
     left: 0;
     width: 100%;
