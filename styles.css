@@ -1234,7 +1234,7 @@ input:focus {
 
 /* --- NEW: DOT INDICATOR STYLES --- */
 .scroll-dots {
-    position: absolute;
+    position: sticky;
     bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
