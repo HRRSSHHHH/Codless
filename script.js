@@ -1126,7 +1126,7 @@ const ParticleGlobe = {
     this.controls.autoRotate = true;
     this.controls.autoRotateSpeed = 3;
     if (this.isTouchDevice) {
-        this.controls.enableRotate = true;
+        this.controls.enableRotate = false;
     }
     this.controls.enablePan = false;
     this.controls.enableZoom = false;
@@ -1263,10 +1263,10 @@ const HorizontalScroll = {
           dotsContainer.appendChild(dot);
         }
 
-        const dots = dotsContainer.querySelectorAll(".dot");
-        dots[0]?.classList.add("active"); // Activate the first dot initially
-
-        let currentActiveDot = 0;
+        const dots = Array.from(dotsContainer.querySelectorAll(".dot"));
+        if (dots.length > 0) {
+          dots[0].classList.add("active"); // Activate the first dot initially
+        }
 
         // Add a scroll event listener to the container
         container.addEventListener('scroll', () => {
@@ -1277,15 +1277,13 @@ const HorizontalScroll = {
 
           // Calculate which dot should be active
           const scrollLeft = container.scrollLeft;
-          const sectionWidth = window.innerWidth;
+          const sectionWidth = horizontalSections[0].offsetWidth; // Use the actual width of a card
           const activeIndex = Math.round(scrollLeft / sectionWidth);
 
-          // Update dots only if the active one has changed
-          if (activeIndex !== currentActiveDot) {
-            dots[currentActiveDot]?.classList.remove("active");
-            dots[activeIndex]?.classList.add("active");
-            currentActiveDot = activeIndex;
-          }
+          // Update dots
+          dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === activeIndex);
+          });
         });
       }
 
