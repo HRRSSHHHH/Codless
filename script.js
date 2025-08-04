@@ -1126,7 +1126,7 @@ const ParticleGlobe = {
     this.controls.autoRotate = true;
     this.controls.autoRotateSpeed = 3;
     if (this.isTouchDevice) {
-        this.controls.enableRotate = false;
+        this.controls.enableRotate = true;
     }
     this.controls.enablePan = false;
     this.controls.enableZoom = false;
@@ -1252,41 +1252,6 @@ const HorizontalScroll = {
       wrapper.style.position = "static";
       wrapper.style.display = "flex";
       wrapper.style.width = `${horizontalSections.length * 100}vw`; // Set width explicitly
-
-      // NEW: Dot indicator logic
-      const dotsContainer = document.querySelector(".scroll-dots");
-      if (dotsContainer) {
-        dotsContainer.innerHTML = ''; // Clear existing dots
-        // Create a dot for each section
-        for (let i = 0; i < horizontalSections.length; i++) {
-          const dot = document.createElement("div");
-          dot.classList.add("dot");
-          dotsContainer.appendChild(dot);
-        }
-
-        const dots = Array.from(dotsContainer.querySelectorAll(".dot"));
-        if (dots.length > 0) {
-          dots[0].classList.add("active"); // Activate the first dot initially
-        }
-
-        // Add a scroll event listener to the container
-        container.addEventListener('scroll', () => {
-          // Hide the "Swipe to continue" message on the first scroll
-          if (scrollCue && !scrollCue.classList.contains('hidden')) {
-            scrollCue.classList.add('hidden');
-          }
-
-          // Calculate which dot should be active
-          const scrollLeft = container.scrollLeft;
-          const sectionWidth = horizontalSections[0].offsetWidth; // Use the actual width of a card
-          const activeIndex = Math.round(scrollLeft / sectionWidth);
-
-          // Update dots
-          dots.forEach((dot, index) => {
-            dot.classList.toggle('active', index === activeIndex);
-          });
-        });
-      }
 
     } else {
       // --- DESKTOP LOGIC (Unchanged) ---
