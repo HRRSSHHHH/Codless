@@ -1256,6 +1256,50 @@ input:focus {
     transform: scale(1.3);
 }
 }
+
+/* ============================================================================ */
+/* Step Sections Responsive */
+/* ============================================================================ */
+
+@media (max-width: 768px) {
+  .step-section {
+    min-height: 100vh;
+    height: auto !important; /* Let content define height and override inline styles */
+    display: flex; /* Use flexbox to help center content */
+    align-items: center;
+    padding: var(--spacing-xl) var(--spacing-md);
+  }
+
+  .step-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto; /* Let height be flexible */
+  }
+
+  .step-col-left {
+    flex: 0 1 auto; /* Text content takes needed space */
+    padding-bottom: var(--spacing-lg);
+  }
+
+  .step-col-right {
+    flex: 1 1 auto; /* Video fills remaining space */
+    min-height: 30vh; /* Give video a responsive minimum height */
+    width: 100%;
+    display: flex; /* Use flex to make child fill height */
+  }
+
+  .step-right-content {
+    flex: 1;
+    display: flex;
+  }
+
+  .step-right-content video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
 /* Vertical sections base styling */
 .vertical-sections .step-section {
   position: relative;
