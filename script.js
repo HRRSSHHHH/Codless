@@ -1256,6 +1256,7 @@ const HorizontalScroll = {
       // NEW: Dot indicator logic
       const dotsContainer = document.querySelector(".scroll-dots");
       if (dotsContainer) {
+        dotsContainer.innerHTML = ''; // Clear existing dots
         // Create a dot for each section
         for (let i = 0; i < horizontalSections.length; i++) {
           const dot = document.createElement("div");
