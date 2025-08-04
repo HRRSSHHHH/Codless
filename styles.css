@@ -1300,6 +1300,26 @@ input:focus {
     object-fit: cover;
   }
 }
+
+/* ============================================================================ */
+/* Horizontal Card Responsive Fix */
+/* ============================================================================ */
+
+@media (max-width: 768px) {
+  .horizontal-card {
+    height: 100vh !important; /* Strict height for horizontal scroll items */
+    overflow: hidden;
+  }
+
+  .horizontal-card .step-col-right {
+    min-height: 0; /* Allow flex item to shrink below its content size */
+  }
+
+  .horizontal-card .step-right-content video {
+    object-fit: contain; /* Ensure video fits without being cropped */
+    max-height: 100%; /* Constrain video height to its container */
+  }
+}
 /* Vertical sections base styling */
 .vertical-sections .step-section {
   position: relative;
