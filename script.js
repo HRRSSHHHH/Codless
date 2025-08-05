@@ -2210,78 +2210,36 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ============================================================================
-// Navbar Show/Hide on Scroll (ScrollTrigger Integration)
+// Navbar Show/Hide on Scroll (NEW GSAP-POWERED VERSION)
 // ============================================================================
-
 const NavbarScrollBehavior = {
-  navbar: null,
-  scrollThreshold: 150, // Minimum scroll before hiding navbar
-  isInitialized: false,
-  
   init() {
-    this.navbar = document.querySelector('.navbar');
-    if (!this.navbar) {
-      console.warn('❌ Navbar element not found');
+    const navbar = document.querySelector('.navbar');
+    if (!navbar) {
+      console.warn('❌ Navbar element not found for scroll behavior.');
       return;
     }
-    
-    // Ensure navbar is visible initially
-    this.showNavbar();
-    
-    // Wait for ScrollTrigger to be ready
-    this.waitForScrollTrigger();
-  },
-  
-  waitForScrollTrigger() {
-    if (typeof ScrollTrigger !== 'undefined') {
-      this.setupScrollTriggerBehavior();
-    } else {
-      setTimeout(() => this.waitForScrollTrigger(), 100);
-    }
-  },
-  
-  setupScrollTriggerBehavior() {
-    // Create a ScrollTrigger instance specifically for navbar behavior
+
+    // Use GSAP's robust ScrollTrigger to handle navbar visibility
     ScrollTrigger.create({
-      trigger: "body",
-      start: "top top",
-      end: "bottom bottom",
-      onUpdate: (self) => {
-        this.handleScrollUpdate(self);
+      start: "top top-=-80", // Start checking after scrolling down 80px
+      end: "max",
+      toggleClass: {
+        targets: navbar,
+        className: "navbar-hidden" // This class has `transform: translateY(-100%)`
+      },
+      // When scrolling down (direction 1), add the class.
+      // When scrolling up (direction -1), remove the class.
+      onUpdate: self => {
+        if (self.direction === 1) { // Scrolling down
+          navbar.classList.add('navbar-hidden');
+        } else { // Scrolling up
+          navbar.classList.remove('navbar-hidden');
+        }
       }
     });
-    
-    this.isInitialized = true;
-  },
-  
-  handleScrollUpdate(self) {
-    if (!this.isInitialized) return;
-    
-    const currentScroll = self.scroll();
-    const direction = self.direction;
-    
-    // Compound conditional logic: Only hide if scrolling down AND past threshold
-    if (direction === 1 && currentScroll > this.scrollThreshold) {
-      // Scrolling down and past threshold - hide navbar
-      this.hideNavbar();
-    } else if (direction === -1 || currentScroll <= this.scrollThreshold) {
-      // Scrolling up OR at/near top - show navbar
-      this.showNavbar();
-    }
-  },
-  
-  showNavbar() {
-    if (this.navbar && this.navbar.classList.contains('navbar-hidden')) {
-      this.navbar.classList.remove('navbar-hidden');
-      this.navbar.setAttribute('aria-hidden', 'false');
-    }
-  },
-  
-  hideNavbar() {
-    if (this.navbar && !this.navbar.classList.contains('navbar-hidden')) {
-      this.navbar.classList.add('navbar-hidden');
-      this.navbar.setAttribute('aria-hidden', 'true');
-    }
+
+    console.log("✅ GSAP-powered navbar scroll behavior initialized.");
   }
 };
 
